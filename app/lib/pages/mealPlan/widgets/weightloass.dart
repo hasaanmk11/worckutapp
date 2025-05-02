@@ -10,7 +10,7 @@ class WeightlossCrad extends StatelessWidget {
       onTap:
           () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => Mealadd(Name: "Weight Loss"),
+              builder: (context) => Mealadd(),
             ),
           ),
       child: Container(

@@ -1,3 +1,5 @@
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
+import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/db/db.dart';
 import 'package:app/pages/categories/model/md.dart';
 import 'package:app/pages/categories/bignner/add.dart';
@@ -6,10 +8,23 @@ import 'package:app/pages/categories/widgets/ctgryCrad/crad.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/cmn.dart';
 
-class Beginners extends StatelessWidget {
+class Beginners extends StatefulWidget {
+  const Beginners({super.key});
 
+  @override
+  State<Beginners> createState() => _BeginnersState();
+}
 
-  const Beginners({super.key, });
+class _BeginnersState extends State<Beginners> {
+  int beginners = 1;
+
+  List<Bignnermodel> categoryList = [];
+
+  @override
+  void initState() {
+    getDataWithId(1);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +40,7 @@ class Beginners extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  showCustomDialog(context);
+                  showCustomDialog(context, beginners);
                 },
                 icon: Icon(Icons.add, color: Colors.black, size: 30),
               ),
@@ -50,10 +65,10 @@ class Beginners extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 ValueListenableBuilder(
-                  valueListenable: beginners,
+                  valueListenable: getDataByLisner,
                   builder: (
                     BuildContext context,
-                    List<WorkoutModel> value,
+                    List<Bignnermodel> value,
                     Widget? child,
                   ) {
                     if (value.isEmpty) {
@@ -65,7 +80,7 @@ class Beginners extends StatelessWidget {
                       );
                     }
 
-                    return ctgryCrad(value);
+                    return ctgryCrad(value, beginners);
                   },
                 ),
               ],
@@ -75,7 +90,4 @@ class Beginners extends StatelessWidget {
       ),
     );
   }
-
-  
 }
-

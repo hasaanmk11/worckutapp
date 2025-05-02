@@ -1,13 +1,16 @@
+import 'dart:io';
+
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
+import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/db/db.dart';
-import 'package:app/pages/categories/model/md.dart';
 import 'package:flutter/material.dart';
 
-void showCustomDialog(BuildContext context) {
+void showCustomDialog(BuildContext context, int categoryID) {
   final TextEditingController textController = TextEditingController();
 
   int selectedTime = 5;
-  int selectedValue1 = 1;
-  int selectedValue2 = 1;
+  int SetChooser = 1;
+  int RepChooser = 1;
 
   showDialog(
     context: context,
@@ -56,14 +59,12 @@ void showCustomDialog(BuildContext context) {
                   }),
                   onChanged: (val) {
                     selectedTime = val!;
-                    print("yourTime");
-                    print(val);
                   },
                 ),
                 SizedBox(height: 16),
 
                 DropdownButtonFormField<int>(
-                  value: selectedValue1,
+                  value: SetChooser,
                   decoration: InputDecoration(
                     labelText: 'Choose Set ',
                     border: OutlineInputBorder(),
@@ -75,13 +76,13 @@ void showCustomDialog(BuildContext context) {
                     );
                   }),
                   onChanged: (val) {
-                    selectedValue1 = val!;
+                    SetChooser = val!;
                   },
                 ),
                 SizedBox(height: 16),
 
                 DropdownButtonFormField<int>(
-                  value: selectedValue2,
+                  value: RepChooser,
                   decoration: InputDecoration(
                     labelText: 'Choose Rep ',
                     border: OutlineInputBorder(),
@@ -93,24 +94,50 @@ void showCustomDialog(BuildContext context) {
                     );
                   }),
                   onChanged: (val) {
-                    selectedValue2 = val!;
+                    RepChooser = val!;
                   },
                 ),
                 SizedBox(height: 20),
 
                 ElevatedButton(
                   child: Text('Submit'),
-                  onPressed: () {
-                    final newWorkout = WorkoutModel(
-                      name: textController.text,
-                      time: selectedTime,
-                      set: selectedValue1,
-                      rep: selectedValue2,
-                    );
+                  onPressed: () async {
+                  
+                    if (textController.text.isEmpty) {
+                      print("Empty workout name");
+                     
+                      showDialog(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: Text('Error'),
+                              content: Text("Please enter a workout name."),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context); 
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            ),
+                      );
+                    } else {
+                      final newWorkout = Bignnermodel(
+                        image: "",
+                        rep: RepChooser.toString(),
+                        set: SetChooser.toString(),
+                        time: selectedTime.toString(),
+                        workoutName: textController.text,
+                        categoryId: categoryID,
+                        id: DateTime.now().microsecondsSinceEpoch,
+                      );
 
-                    beginners.value = [...beginners.value, newWorkout];
+                      await BignnerDb.addBignner(newWorkout);
 
-                    Navigator.pop(context);
+                      await getDataWithId(categoryID);
+                      Navigator.pop(context);
+                    }
                   },
                 ),
               ],

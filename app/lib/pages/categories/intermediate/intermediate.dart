@@ -1,3 +1,5 @@
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
+import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/db/db.dart';
 
 import 'package:app/pages/categories/model/md.dart';
@@ -7,8 +9,20 @@ import 'package:app/pages/categories/widgets/ctgryCrad/crad.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/cmn.dart';
 
-class Intermediate extends StatelessWidget {
-  const Intermediate({super.key});
+class Intermediate extends StatefulWidget {
+  Intermediate({super.key});
+
+  @override
+  State<Intermediate> createState() => _IntermediateState();
+}
+
+class _IntermediateState extends State<Intermediate> {
+  int intermediate = 2;
+  @override
+  void initState() {
+   getDataWithId(intermediate);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +38,7 @@ class Intermediate extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  showCustomDialog(context);
+                  showCustomDialog(context, intermediate);
                 },
                 icon: Icon(Icons.add, color: Colors.black, size: 30),
               ),
@@ -49,24 +63,24 @@ class Intermediate extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 ValueListenableBuilder(
-                  valueListenable: beginners,
-                  builder: (
-                    BuildContext context,
-                    List<WorkoutModel> value,
-                    Widget? child,
-                  ) {
-                    if (value.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "No workouts added yet",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      );
-                    }
+  valueListenable: getDataByLisner,
+  builder: (
+    BuildContext context,
+    List<Bignnermodel> value,
+    Widget? child,
+  ) {
+    if (value.isEmpty) {
+      return const Center(
+        child: Text(
+          "No workouts added yet",
+          style: TextStyle(fontSize: 18),
+        ),
+      );
+    }
 
-                    return ctgryCrad(value);
-                  },
-                ),
+    return ctgryCrad(value, intermediate); // ✅ Pass category ID here
+  },
+),
               ],
             ),
           ),

@@ -1,7 +1,10 @@
 import 'package:app/pages/categories/advanced/advanced.dart';
 import 'package:app/pages/categories/bignner/beginners.dart';
 import 'package:app/pages/categories/intermediate/intermediate.dart';
+import 'package:app/pages/categories/sample_workouts/sample_wrk.dart';
+import 'package:app/pages/categories/widgets/DiscoverText/descover.dart';
 import 'package:app/pages/categories/widgets/catgryWd.dart';
+import 'package:app/pages/categories/widgets/warmUpCrad.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatelessWidget {
@@ -18,82 +21,17 @@ class Categories extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                      "Discover",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
+                DiscoverText(),
                 const SizedBox(height: 30),
 
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width - 20,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(
-                      255,
-                      119,
-                      119,
-                      119,
-                    ).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        child: Image.asset(
-                          "assets/catgry1.png",
-                          width: 140,
-                          fit: BoxFit.cover,
+                InkWell(
+                  onTap:
+                      () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => WorkoutVideoList(),
                         ),
                       ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 20,
-                          top: 20,
-                          right: 150,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Warm-Up First!",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Text(
-                                "A good warm-up prevents\ninjury and boosts\nperformance. Take 5 minutes\nto prepare your body.",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: WarmUpCrad(),
                 ),
 
                 const SizedBox(height: 30),

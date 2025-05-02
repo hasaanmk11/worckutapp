@@ -1,4 +1,5 @@
 import 'package:app/pages/mealPlan/mealAdd.dart';
+import 'package:app/pages/mealPlan/widgets/gainAndLossPage/weigth_gain.dart';
 import 'package:flutter/material.dart';
 
 class WeightGainCrad extends StatelessWidget {
@@ -21,7 +22,7 @@ class WeightGainCrad extends StatelessWidget {
                   onTap:
                       () => Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => Mealadd(Name: "Weight gain"),
+                          builder: (context) => WeightGainAdd(),
                         ),
                       ),
                   child: Image.asset(

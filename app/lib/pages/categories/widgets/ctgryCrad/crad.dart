@@ -1,9 +1,8 @@
-import 'package:app/pages/categories/model/md.dart';
+import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/widgets/catgryButton/buttons.dart';
-import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 
-ListView ctgryCrad(List<WorkoutModel> value) {
+ListView ctgryCrad(List<Bignnermodel> value, int categoryID) {
   return ListView.separated(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
@@ -23,13 +22,15 @@ ListView ctgryCrad(List<WorkoutModel> value) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-
+            Text(
+              "Name: ${workout.workoutName}",
+              style: TextStyle(fontSize: 18),
+            ),
             Text("Duration: ${workout.time}", style: TextStyle(fontSize: 18)),
             Text("Set: ${workout.set}", style: TextStyle(fontSize: 18)),
             Text("Rep: ${workout.rep}", style: TextStyle(fontSize: 18)),
             const SizedBox(height: 10),
-
-            CatgtyFunctionsButton(),
+            CatgtyFunctionsButton(item: workout, categoryID: categoryID),
           ],
         ),
       );

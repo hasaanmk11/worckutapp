@@ -2,7 +2,7 @@ import 'package:app/pages/categories/bignner/beginners.dart';
 import 'package:app/pages/categories/db/db.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/selectButton.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/wd.dart';
-import 'package:app/pages/setGoals/startWorckut/start.dart';
+
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 

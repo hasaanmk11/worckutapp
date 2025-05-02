@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class BottomNavItem extends StatelessWidget {
   final IconData icon;
@@ -26,6 +25,4 @@ class BottomNavItem extends StatelessWidget {
       ],
     );
   }
-
 }
-

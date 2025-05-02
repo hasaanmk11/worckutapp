@@ -1,13 +1,26 @@
-import 'package:app/pages/categories/db/db.dart';
-import 'package:app/pages/categories/model/md.dart';
+import 'package:app/pages/categories/bignner/db/dbFunction.dart';
+import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
+
 import 'package:app/pages/categories/bignner/add.dart';
 
 import 'package:app/pages/categories/widgets/ctgryCrad/crad.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/cmn.dart';
 
-class Advanced extends StatelessWidget {
-  const Advanced({super.key});
+class Advanced extends StatefulWidget {
+  Advanced({super.key});
+
+  @override
+  State<Advanced> createState() => _AdvancedState();
+}
+
+class _AdvancedState extends State<Advanced> {
+  int advanced = 3;
+  @override
+  void initState() {
+    getDataWithId(advanced);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +36,7 @@ class Advanced extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {
-                  showCustomDialog(context);
+                  showCustomDialog(context, advanced);
                 },
                 icon: Icon(Icons.add, color: Colors.black, size: 30),
               ),
@@ -48,10 +61,10 @@ class Advanced extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 ValueListenableBuilder(
-                  valueListenable: beginners,
+                  valueListenable: getDataByLisner,
                   builder: (
                     BuildContext context,
-                    List<WorkoutModel> value,
+                    List<Bignnermodel> value,
                     Widget? child,
                   ) {
                     if (value.isEmpty) {
@@ -63,7 +76,7 @@ class Advanced extends StatelessWidget {
                       );
                     }
 
-                    return ctgryCrad(value.cast<WorkoutModel>());
+                    return ctgryCrad(value, advanced);
                   },
                 ),
               ],

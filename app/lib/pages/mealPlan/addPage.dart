@@ -1,8 +1,14 @@
+import 'package:app/pages/mealPlan/db/db_Functions.dart';
+import 'package:app/pages/mealPlan/mealAdd.dart';
+import 'package:app/pages/mealPlan/model/MealModel.dart';
 import 'package:flutter/material.dart';
-import 'package:app/styles/cmn.dart'; // Make sure this exists and includes commentStyle()
+import 'package:app/styles/cmn.dart';
 
-void addMEal(BuildContext context) {
-  final TextEditingController textController = TextEditingController();
+void addMEal(BuildContext context, catgryName) {
+  final TextEditingController FoodController = TextEditingController();
+  final TextEditingController ProteinController = TextEditingController();
+  final TextEditingController caloreisController = TextEditingController();
+  final TextEditingController FatController = TextEditingController();
 
   String selectedTime = "Morning";
   int selectedValue1 = 1;
@@ -24,21 +30,9 @@ void addMEal(BuildContext context) {
               children: [
                 Text("Add Food", style: commentStyle(20, Colors.black)),
                 SizedBox(height: 12),
-                Container(
-                  width: MediaQuery.of(context).size.width - 60,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(Icons.fastfood, size: 60),
-                ),
-                SizedBox(height: 8),
-                Text("Pick Image", style: commentStyle(16, Colors.black)),
-                SizedBox(height: 16),
 
                 TextField(
-                  controller: textController,
+                  controller: FoodController,
                   decoration: InputDecoration(
                     labelText: 'Food Name',
                     border: OutlineInputBorder(),
@@ -73,7 +67,8 @@ void addMEal(BuildContext context) {
                 SizedBox(height: 16),
 
                 TextField(
-                  controller: textController,
+                  keyboardType: TextInputType.number,
+                  controller: ProteinController,
                   decoration: InputDecoration(
                     labelText: 'Protein(g)',
                     border: OutlineInputBorder(),
@@ -82,7 +77,8 @@ void addMEal(BuildContext context) {
                 SizedBox(height: 16),
 
                 TextField(
-                  controller: textController,
+                  keyboardType: TextInputType.number,
+                  controller: caloreisController,
                   decoration: InputDecoration(
                     labelText: 'Calories(g)',
                     border: OutlineInputBorder(),
@@ -90,7 +86,8 @@ void addMEal(BuildContext context) {
                 ),
                 SizedBox(height: 20),
                 TextField(
-                  controller: textController,
+                  keyboardType: TextInputType.number,
+                  controller: FatController,
                   decoration: InputDecoration(
                     labelText: 'Fat(g)',
                     border: OutlineInputBorder(),
@@ -99,7 +96,22 @@ void addMEal(BuildContext context) {
 
                 ElevatedButton(
                   child: Text('Submit'),
-                  onPressed: () {
+                  onPressed: () async {
+                    final data = Mealmodel(
+                      name: FoodController.text,
+                      protein: ProteinController.text,
+                      calories: caloreisController.text,
+                      fat: FatController.text,
+                      time: selectedTime,
+                      categoryId: catgryName,
+                      id: DateTime.now().microsecond,
+                    );
+
+                    await MealPlanDbFunctions.addMealToWeightGainAndLoos(data);
+
+                    await getMealWithId(catgryName);
+
+                    print("Aded");
                     Navigator.of(context).pop();
                   },
                 ),

@@ -4,7 +4,6 @@ import 'package:app/pages/Calculator/widgets/tab.dart';
 import 'package:app/pages/Calculator/widgets/wd.dart';
 import 'package:flutter/material.dart';
 
-
 class Calculator extends StatefulWidget {
   const Calculator({Key? key}) : super(key: key);
 
@@ -79,15 +78,15 @@ class _CalculatorState extends State<Calculator> {
                 if (selectedTab == 0) ...[
                   TipItem(
                     Icons.directions_run,
-                    "Do at least ${cardioMinutes.toStringAsFixed(0)} minutes of cardio 4-5 times a week.",
+                    "Do at least $cardioMinutes minutes of cardio 4-5 times a week.",
                   ),
                   TipItem(
                     Icons.restaurant,
-                    "Eat around ${caloriesTarget.toStringAsFixed(0)} calories per day.",
+                    "Eat around $caloriesTarget calories per day.",
                   ),
                   TipItem(
                     Icons.local_drink,
-                    "Drink at least ${waterLiters.toStringAsFixed(1)} liters of water daily.",
+                    "Drink at least $waterLiters liters of water daily.",
                   ),
                   TipItem(
                     Icons.bedtime,
@@ -108,7 +107,7 @@ class _CalculatorState extends State<Calculator> {
                   ),
                   TipItem(
                     Icons.local_drink,
-                    "Drink at least ${waterLiters.toStringAsFixed(1)} liters of water daily.",
+                    "Drink at least $waterLiters liters of water daily.",
                   ),
                   TipItem(
                     Icons.bedtime,
