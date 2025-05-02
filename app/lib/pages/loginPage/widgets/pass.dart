@@ -1,7 +1,9 @@
+// pass.dart
 import 'package:flutter/material.dart';
 
-class passwordfil extends StatelessWidget {
-  const passwordfil({super.key});
+class PasswordField extends StatelessWidget {
+  final TextEditingController controller;
+  const PasswordField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +24,12 @@ class passwordfil extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
+              controller: controller,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Password',
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
+                contentPadding: EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 10,
                 ),

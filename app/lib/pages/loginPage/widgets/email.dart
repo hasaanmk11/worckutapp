@@ -1,7 +1,9 @@
+// email.dart
 import 'package:flutter/material.dart';
 
-class emailFild extends StatelessWidget {
-  const emailFild({super.key});
+class EmailField extends StatelessWidget {
+  final TextEditingController controller;
+  const EmailField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +24,11 @@ class emailFild extends StatelessWidget {
           ),
           Expanded(
             child: TextField(
-              decoration: InputDecoration(
+              controller: controller,
+              decoration: const InputDecoration(
                 hintText: 'Email',
                 border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
+                contentPadding: EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 10,
                 ),

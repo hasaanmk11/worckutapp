@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/widgets/catgryButton/buttons.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +24,25 @@ ListView ctgryCrad(List<Bignnermodel> value, int categoryID) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            Text(
-              "Name: ${workout.workoutName}",
-              style: TextStyle(fontSize: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Name: ${workout.workoutName}",
+                  style: TextStyle(fontSize: 18),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  width: 100,
+                  height: 100,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.file(File(workout.image)),
+                  ),
+                ),
+              ],
             ),
             Text("Duration: ${workout.time}", style: TextStyle(fontSize: 18)),
             Text("Set: ${workout.set}", style: TextStyle(fontSize: 18)),

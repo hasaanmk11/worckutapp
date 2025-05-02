@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:app/pages/mealPlan/activities/activityModel/activity_model.dart';
 import 'package:app/pages/mealPlan/activities/add.dart';
 import 'package:app/pages/mealPlan/activities/db/activity_db_functions.dart';
 import 'package:app/pages/mealPlan/activities/edit_activity.dart';
-
+import 'package:app/pages/mealPlan/activities/widgets/delete_alert.dart';
+import 'package:app/pages/mealPlan/activities/widgets/edit_image_delete.dart';
+import 'package:app/pages/mealPlan/activities/widgets/edit_section.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -15,6 +18,7 @@ class Activitie extends StatefulWidget {
 }
 
 class _ActivitieState extends State<Activitie> {
+  late String images;
   @override
   void initState() {
     getActivityData();
@@ -55,6 +59,7 @@ class _ActivitieState extends State<Activitie> {
                       itemCount: value.length,
                       itemBuilder: (context, index) {
                         final activity = value[index];
+
                         final box = Hive.box<ActivityModel>(boxName);
                         final key = box.keyAt(index);
                         return Container(
@@ -92,7 +97,6 @@ class _ActivitieState extends State<Activitie> {
                                           "Time:",
                                           style: const TextStyle(fontSize: 15),
                                         ),
-
                                         Text(
                                           activity.time,
                                           style: commentStyle(15, Colors.black),
@@ -110,21 +114,8 @@ class _ActivitieState extends State<Activitie> {
                                         backgroundColor: Colors.purple,
                                       ),
                                       onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return EditActivity(
-                                              initialActivity:
-                                                  activity.activity,
-                                              initialTime: int.parse(
-                                                activity.time,
-                                              ),
-                                              id: key,
-                                            );
-                                          },
-                                        );
+                                        editSection(context, activity, key);
                                       },
-
                                       child: const Text(
                                         "Edit",
                                         style: TextStyle(color: Colors.white),
@@ -137,23 +128,8 @@ class _ActivitieState extends State<Activitie> {
                                         color: Colors.grey[700],
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: const [
-                                          Icon(
-                                            Icons.image,
-                                            color: Colors.white,
-                                          ),
-                                          SizedBox(height: 6),
-                                          Text(
-                                            "Pick Image",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ],
+                                      child: SingleChildScrollView(
+                                        child: ImageSection(activity: activity),
                                       ),
                                     ),
                                     ElevatedButton(
@@ -161,26 +137,7 @@ class _ActivitieState extends State<Activitie> {
                                         backgroundColor: Colors.red,
                                       ),
                                       onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder:
-                                              (context) => AlertDialog(
-                                                title: Text(
-                                                  "Are sure you want to delete the card",
-                                                ),
-                                                actions: [
-                                                  ElevatedButton(
-                                                    onPressed: () async {
-                                                      await deleteActivity(key);
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop();
-                                                    },
-                                                    child: Text("Yes"),
-                                                  ),
-                                                ],
-                                              ),
-                                        );
+                                        DeleteAlert(context, key);
                                       },
                                       child: const Text(
                                         "Delete",

@@ -1,41 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'activity_model.dart';
+part of 'login_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ActivityModelAdapter extends TypeAdapter<ActivityModel> {
+class UserModelAdapter extends TypeAdapter<UserModel> {
   @override
-  final int typeId = 3;
+  final int typeId = 4;
 
   @override
-  ActivityModel read(BinaryReader reader) {
+  UserModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ActivityModel(
-      image: fields[3] as String,
-      id: fields[2] as int,
-      activity: fields[0] as String,
-      time: fields[1] as String,
+    return UserModel(
+      username: fields[0] as String,
+      id: fields[2] as String,
+      password: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, ActivityModel obj) {
+  void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.activity)
-      ..writeByte(1)
-      ..write(obj.time)
-      ..writeByte(2)
-      ..write(obj.id)
       ..writeByte(3)
-      ..write(obj.image);
+      ..writeByte(0)
+      ..write(obj.username)
+      ..writeByte(1)
+      ..write(obj.password)
+      ..writeByte(2)
+      ..write(obj.id);
   }
 
   @override
@@ -44,7 +41,7 @@ class ActivityModelAdapter extends TypeAdapter<ActivityModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ActivityModelAdapter &&
+      other is UserModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -9,6 +9,13 @@ class ActivityModel {
   final String time;
   @HiveField(2)
   final int id;
+  @HiveField(3)
+  final String image;
 
-  ActivityModel({required this.id, required this.activity, required this.time});
+  ActivityModel({
+    required this.image,
+    required this.id,
+    required this.activity,
+    required this.time,
+  });
 }

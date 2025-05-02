@@ -2,15 +2,25 @@ import 'dart:io';
 
 import 'package:app/pages/categories/bignner/db/DbFunction.dart';
 import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
-import 'package:app/pages/categories/db/db.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void showCustomDialog(BuildContext context, int categoryID) {
   final TextEditingController textController = TextEditingController();
+  ValueNotifier<String> caloriesImages = ValueNotifier<String>("");
 
   int selectedTime = 5;
   int SetChooser = 1;
   int RepChooser = 1;
+
+  Future<void> pickImageFromGallery() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      caloriesImages.value = pickedFile.path;
+    }
+  }
 
   showDialog(
     context: context,
@@ -25,12 +35,28 @@ void showCustomDialog(BuildContext context, int categoryID) {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey[300],
+                GestureDetector(
+                  onTap: pickImageFromGallery,
+                  child: ValueListenableBuilder<String>(
+                    valueListenable: caloriesImages,
+                    builder: (context, imagePath, _) {
+                      return CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                            imagePath.isNotEmpty
+                                ? FileImage(File(imagePath))
+                                : null,
+                        backgroundColor: Colors.grey[300],
+                        child:
+                            imagePath.isEmpty
+                                ? Icon(
+                                  Icons.add_a_photo,
+                                  size: 30,
+                                  color: Colors.black54,
+                                )
+                                : null,
+                      );
+                    },
                   ),
                 ),
                 SizedBox(height: 16),
@@ -66,7 +92,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                 DropdownButtonFormField<int>(
                   value: SetChooser,
                   decoration: InputDecoration(
-                    labelText: 'Choose Set ',
+                    labelText: 'Choose Set',
                     border: OutlineInputBorder(),
                   ),
                   items: List.generate(50, (index) {
@@ -84,7 +110,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                 DropdownButtonFormField<int>(
                   value: RepChooser,
                   decoration: InputDecoration(
-                    labelText: 'Choose Rep ',
+                    labelText: 'Choose Rep',
                     border: OutlineInputBorder(),
                   ),
                   items: List.generate(50, (index) {
@@ -102,10 +128,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                 ElevatedButton(
                   child: Text('Submit'),
                   onPressed: () async {
-                  
                     if (textController.text.isEmpty) {
-                      print("Empty workout name");
-                     
                       showDialog(
                         context: context,
                         builder:
@@ -115,7 +138,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pop(context); 
+                                    Navigator.pop(context);
                                   },
                                   child: Text('OK'),
                                 ),
@@ -124,7 +147,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                       );
                     } else {
                       final newWorkout = Bignnermodel(
-                        image: "",
+                        image: caloriesImages.value,
                         rep: RepChooser.toString(),
                         set: SetChooser.toString(),
                         time: selectedTime.toString(),
@@ -134,7 +157,6 @@ void showCustomDialog(BuildContext context, int categoryID) {
                       );
 
                       await BignnerDb.addBignner(newWorkout);
-
                       await getDataWithId(categoryID);
                       Navigator.pop(context);
                     }

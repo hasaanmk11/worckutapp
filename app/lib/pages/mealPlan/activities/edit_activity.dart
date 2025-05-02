@@ -84,6 +84,7 @@ class _EditActivityState extends State<EditActivity> {
             ElevatedButton(
               onPressed: () async {
                 final data = ActivityModel(
+                  image: "",
                   id: ids,
                   activity: selectedActivity,
                   time: selectedTime.toString(),

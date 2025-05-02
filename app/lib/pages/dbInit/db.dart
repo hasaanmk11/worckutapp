@@ -1,4 +1,5 @@
 import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
+import 'package:app/pages/loginPage/model/login_model.dart';
 import 'package:app/pages/mealPlan/activities/activityModel/activity_model.dart';
 import 'package:app/pages/mealPlan/model/MealModel.dart';
 
@@ -16,5 +17,8 @@ Future<void> init() async {
 
   if (!Hive.isAdapterRegistered(ActivityModelAdapter().typeId)) {
     Hive.registerAdapter(ActivityModelAdapter());
+  }
+  if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
+    Hive.registerAdapter(UserModelAdapter());
   }
 }
