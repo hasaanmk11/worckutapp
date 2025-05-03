@@ -11,8 +11,7 @@ void addMEal(BuildContext context, catgryName) {
   final TextEditingController FatController = TextEditingController();
 
   String selectedTime = "Morning";
-  int selectedValue1 = 1;
-  int selectedValue2 = 1;
+
   List<String> time = ["Morning", "AfterNoon", "Evening", "Night"];
 
   showDialog(
@@ -111,7 +110,9 @@ void addMEal(BuildContext context, catgryName) {
 
                     await getMealWithId(catgryName);
 
-                    print("Aded");
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop();
                   },
                 ),

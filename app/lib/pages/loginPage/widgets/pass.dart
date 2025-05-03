@@ -1,4 +1,3 @@
-// pass.dart
 import 'package:flutter/material.dart';
 
 class PasswordField extends StatelessWidget {
@@ -23,7 +22,7 @@ class PasswordField extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               obscureText: true,
               decoration: const InputDecoration(
@@ -34,6 +33,14 @@ class PasswordField extends StatelessWidget {
                   horizontal: 10,
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Password is required';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
             ),
           ),
         ],

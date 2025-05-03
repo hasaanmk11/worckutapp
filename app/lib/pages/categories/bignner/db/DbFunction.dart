@@ -11,11 +11,6 @@ class BignnerDb {
     final box = await Hive.openBox<Bignnermodel>(boxName);
     await box.add(data);
   }
-
-  static Future<void> getData() async {
-    final box = await Hive.openBox<Bignnermodel>(boxName);
-    getDataByLisner.value = box.values.toList();
-  }
 }
 
 getDataWithId(int id) async {

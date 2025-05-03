@@ -2,24 +2,26 @@ import 'package:app/pages/mealPlan/activities/db/activity_db_functions.dart';
 import 'package:flutter/material.dart';
 
 void DeleteAlert(BuildContext context, key) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text(
-              "Are you sure you want to delete the card?",
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () async {
-                  await deleteActivity(key);
-                  Navigator.of(
-                    context,
-                  ).pop();
-                },
-                child: Text("Yes"),
-              ),
-            ],
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Confirm Delete"),
+        content: Text("Are you sure you want to delete this activity?"),
+        actions: [
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-    );
-  }
+          TextButton(
+            child: Text("Delete", style: TextStyle(color: Colors.red)),
+            onPressed: () async {
+              await deleteActivity(key);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

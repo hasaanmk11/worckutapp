@@ -7,7 +7,14 @@ Widget buildVideoPlayerCard(String videoUrl) {
   if (videoId != null) {
     YoutubePlayerController videoController = YoutubePlayerController(
       initialVideoId: videoId,
-      flags: YoutubePlayerFlags(autoPlay: false, mute: false),
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        controlsVisibleAtStart: true,
+        enableCaption: false,
+        isLive: false,
+        
+      ),
     );
 
     return Padding(

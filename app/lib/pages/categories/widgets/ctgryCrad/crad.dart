@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/categories/widgets/catgryButton/buttons.dart';
+import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 
 ListView ctgryCrad(List<Bignnermodel> value, int categoryID) {
@@ -26,10 +27,11 @@ ListView ctgryCrad(List<Bignnermodel> value, int categoryID) {
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   "Name: ${workout.workoutName}",
-                  style: TextStyle(fontSize: 18),
+                  style: commentStyle(20, Colors.black),
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -44,9 +46,12 @@ ListView ctgryCrad(List<Bignnermodel> value, int categoryID) {
                 ),
               ],
             ),
-            Text("Duration: ${workout.time}", style: TextStyle(fontSize: 18)),
-            Text("Set: ${workout.set}", style: TextStyle(fontSize: 18)),
-            Text("Rep: ${workout.rep}", style: TextStyle(fontSize: 18)),
+            Text(
+              "Duration: ${workout.time}",
+              style: commentStyle(20, Colors.black),
+            ),
+            Text("Set: ${workout.set}", style: commentStyle(20, Colors.black)),
+            Text("Rep: ${workout.rep}", style: commentStyle(20, Colors.black)),
             const SizedBox(height: 10),
             CatgtyFunctionsButton(item: workout, categoryID: categoryID),
           ],

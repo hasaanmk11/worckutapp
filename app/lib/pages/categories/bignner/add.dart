@@ -10,8 +10,8 @@ void showCustomDialog(BuildContext context, int categoryID) {
   ValueNotifier<String> caloriesImages = ValueNotifier<String>("");
 
   int selectedTime = 5;
-  int SetChooser = 1;
-  int RepChooser = 1;
+  int setChooser = 1;
+  int repChooser = 1;
 
   Future<void> pickImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(
@@ -90,7 +90,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                 SizedBox(height: 16),
 
                 DropdownButtonFormField<int>(
-                  value: SetChooser,
+                  value: setChooser,
                   decoration: InputDecoration(
                     labelText: 'Choose Set',
                     border: OutlineInputBorder(),
@@ -102,13 +102,13 @@ void showCustomDialog(BuildContext context, int categoryID) {
                     );
                   }),
                   onChanged: (val) {
-                    SetChooser = val!;
+                    setChooser = val!;
                   },
                 ),
                 SizedBox(height: 16),
 
                 DropdownButtonFormField<int>(
-                  value: RepChooser,
+                  value: repChooser,
                   decoration: InputDecoration(
                     labelText: 'Choose Rep',
                     border: OutlineInputBorder(),
@@ -120,7 +120,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                     );
                   }),
                   onChanged: (val) {
-                    RepChooser = val!;
+                    repChooser = val!;
                   },
                 ),
                 SizedBox(height: 20),
@@ -148,8 +148,8 @@ void showCustomDialog(BuildContext context, int categoryID) {
                     } else {
                       final newWorkout = Bignnermodel(
                         image: caloriesImages.value,
-                        rep: RepChooser.toString(),
-                        set: SetChooser.toString(),
+                        rep: repChooser.toString(),
+                        set: setChooser.toString(),
                         time: selectedTime.toString(),
                         workoutName: textController.text,
                         categoryId: categoryID,

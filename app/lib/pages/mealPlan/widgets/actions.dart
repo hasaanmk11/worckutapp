@@ -40,8 +40,34 @@ class EditAndImageAndDeleteParts extends StatelessWidget {
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.red),
           ),
+
           onPressed: () {
-            deleteMmeal(catgryName, cardId);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Confirm Delete"),
+                  content: Text("Are you sure you want to delete this meal?"),
+                  actions: [
+                    TextButton(
+                      child: Text("Cancel"),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    TextButton(
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        deleteMmeal(catgryName, cardId);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
           child: Text("Delete", style: TextStyle(color: Colors.white)),
         ),

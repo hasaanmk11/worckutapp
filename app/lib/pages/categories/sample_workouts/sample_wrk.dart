@@ -1,91 +1,95 @@
+import 'dart:async';
+import 'dart:ui';
+import 'package:app/pages/categories/sample_workouts/widgets/glassHeader/card.dart';
+import 'package:app/pages/categories/sample_workouts/widgets/glassHeader/glass_header.dart';
 import 'package:app/pages/categories/sample_workouts/widgets/pullUps.dart';
 import 'package:app/pages/categories/sample_workouts/widgets/pushUps.dart';
 import 'package:app/pages/categories/sample_workouts/widgets/shoulder_wk.dart';
 import 'package:app/pages/categories/sample_workouts/widgets/warmUp.dart';
-import 'package:app/pages/categories/sample_workouts/widgets/workout_Card.dart';
-import 'package:app/styles/cmn.dart';
+
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class WorkoutVideoList extends StatefulWidget {
   const WorkoutVideoList({super.key});
 
   @override
-  State<WorkoutVideoList> createState() => _MyWidgetState();
+  State<WorkoutVideoList> createState() => _WorkoutVideoListState();
 }
 
-class _MyWidgetState extends State<WorkoutVideoList> {
-  late YoutubePlayerController controller;
+class _WorkoutVideoListState extends State<WorkoutVideoList> {
+  bool isLoaded = false;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+  
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        isLoaded = true;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Workout Video")),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Workout Videos"),
+        backgroundColor: Colors.black.withOpacity(0.6),
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/splash.jpeg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 80, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Warm Up", style: commentStyle(20, Colors.red)),
+                glassHeader("Warm Up", Colors.red),
+                glassCard(
+                  child: isLoaded ? const WarmUp() : _loadingPlaceholder(),
                 ),
-              ],
-            ),
-            WarmUp(),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Push Ups",
-                    style: commentStyle(20, Colors.blueAccent),
-                  ),
-                ),
-              ],
-            ),
-            PushUps(),
+                const SizedBox(height: 30),
 
-            SizedBox(height: 50),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Pull Ups",
-                    style: commentStyle(20, Colors.blueAccent),
-                  ),
+                glassHeader("Push Ups", Colors.blueAccent),
+                glassCard(
+                  child: isLoaded ? const PushUps() : _loadingPlaceholder(),
+                ),
+                const SizedBox(height: 30),
+
+                glassHeader("Pull Ups", Colors.green),
+                glassCard(
+                  child: isLoaded ? const pullUps() : _loadingPlaceholder(),
+                ),
+                const SizedBox(height: 30),
+
+                glassHeader("Shoulder", Colors.orange),
+                glassCard(
+                  child: isLoaded ? const Shoulder() : _loadingPlaceholder(),
                 ),
               ],
             ),
-            pullUps(),
-            SizedBox(height: 50),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "shoulder",
-                    style: commentStyle(20, Colors.blueAccent),
-                  ),
-                ),
-              ],
-            ),
-            Shoulder(),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  
+  
+
+  Widget _loadingPlaceholder() {
+    return const SizedBox(
+      height: 200,
+      child: Center(child: CircularProgressIndicator(color: Colors.white)),
     );
   }
 }

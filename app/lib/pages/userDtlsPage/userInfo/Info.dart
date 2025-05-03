@@ -1,3 +1,5 @@
+import 'package:app/pages/loginPage/db/db_function.dart';
+import 'package:app/pages/loginPage/login.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 
@@ -12,15 +14,40 @@ class _InfoState extends State<Info> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Container(
-        width: 100,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.red,
-        ),
-        child: Center(
-          child: Text("Logout", style: commentStyle(20, Colors.white)),
+      floatingActionButton: InkWell(
+        onTap: () async {
+          showDialog(
+            context: context,
+            builder:
+                (context) => AlertDialog(
+                  title: Text("Are youn sure."),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        await deleteUser();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      child: Text("Yes"),
+                    ),
+                  ],
+                ),
+          );
+        },
+        child: Container(
+          width: 100,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.red,
+          ),
+          child: Center(
+            child: Text("Logout", style: commentStyle(20, Colors.white)),
+          ),
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 223, 223, 223),

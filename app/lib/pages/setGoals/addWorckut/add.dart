@@ -1,5 +1,5 @@
 import 'package:app/pages/categories/bignner/beginners.dart';
-import 'package:app/pages/categories/db/db.dart';
+import 'package:app/pages/categories/db_listeners/db.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/selectButton.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/wd.dart';
 

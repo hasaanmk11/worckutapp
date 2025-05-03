@@ -1,4 +1,4 @@
-// email.dart
+import 'package:app/pages/loginPage/const/consts.dart';
 import 'package:flutter/material.dart';
 
 class EmailField extends StatelessWidget {
@@ -7,6 +7,7 @@ class EmailField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
     return Container(
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.9),
@@ -23,8 +24,9 @@ class EmailField extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
+              keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
                 hintText: 'Email',
                 border: InputBorder.none,
@@ -33,6 +35,14 @@ class EmailField extends StatelessWidget {
                   horizontal: 10,
                 ),
               ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email is required';
+                } else if (!regExp.hasMatch(value)) {
+                  return 'Enter a valid email';
+                }
+                return null;
+              },
             ),
           ),
         ],
