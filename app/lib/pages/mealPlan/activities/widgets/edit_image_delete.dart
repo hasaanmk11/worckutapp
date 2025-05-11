@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'dart:ui';
+
 
 import 'package:app/pages/mealPlan/activities/activityModel/activity_model.dart';
+
 import 'package:flutter/material.dart';
 
 class ImageSection extends StatelessWidget {

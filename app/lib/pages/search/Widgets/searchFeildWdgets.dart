@@ -1,3 +1,4 @@
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
 import 'package:flutter/material.dart';
 
 class SearchFeild extends StatelessWidget {
@@ -14,6 +15,18 @@ class SearchFeild extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: TextField(
+        onChanged: (value) {
+          print(value);
+
+          final filtered =
+              setGoalListener.value
+                  .where(
+                    (goal) => goal.workoutName.toLowerCase().contains(value),
+                  )
+                  .toList();
+            filteredGoalsNotifier.value = filtered;
+          
+        },
         controller: searchController,
         decoration: const InputDecoration(
           hintText: "Search workouts.....",

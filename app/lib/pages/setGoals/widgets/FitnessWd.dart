@@ -1,4 +1,9 @@
-import 'package:app/pages/setGoals/addWorckut/add.dart';
+import 'package:app/pages/setGoals/const/fitness_startbutton.dart';
+import 'package:app/pages/setGoals/const/fitnessdiscription.dart';
+import 'package:app/pages/setGoals/const/fitnesstext.dart';
+
+
+
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 
@@ -34,60 +39,12 @@ class FitnessCardOfSetGoal extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Fitness",
-                            style: commentStyle(40, Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
+                    FitnessText(),
                     Padding(
                       padding: const EdgeInsets.only(top: 30, left: 40),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Know what you want - muscle,\nStrength, or fat loss. Clear goals\nkeep you focused and fired up every\nrep!",
-                            style: commentStyle(12, Colors.white),
-                          ),
-                        ],
-                      ),
+                      child: Row(children: [FitnessDiscription()]),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 40),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap:
-                                () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AddWorkoutInSetGoal(),
-                                  ),
-                                ),
-                            child: Container(
-                              width: 70,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Start",
-                                  style: commentStyle(
-                                    12,
-                                    const Color.fromARGB(255, 108, 0, 148),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    fitnessStartButton(),
                   ],
                 ),
               ),

@@ -1,31 +1,24 @@
 import 'dart:async';
+
+import 'package:app/pages/setGoals/model/setgoal.dart';
+import 'package:app/pages/setGoals/setGoalTimer/const/timeritems.dart';
+import 'package:app/pages/setGoals/setGoalTimer/db/db.dart';
+
+import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TimerPage extends StatefulWidget {
-  const TimerPage({super.key});
+  TimerPage({super.key, required this.day, required this.workout});
+
+  final int day;
+  List<String> workout;
 
   @override
   State<TimerPage> createState() => _TimerPageState();
 }
 
 class _TimerPageState extends State<TimerPage> {
-  int seconds = 30;
-  int restTime = 30;
-  Timer? timer;
-  Timer? restTimer;
-  bool isRunning = false;
-
-  final Map<String, int> timeOptions = {
-    "5 mnt": 300,
-    "30 Sec": 30,
-    "2 mnt": 120,
-    "1 mnt": 60,
-    "45 Sec": 45,
-    "10 mnt": 600,
-    "15 mnt": 900,
-  };
-
   void startTimer() {
     stopTimer();
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -37,6 +30,12 @@ class _TimerPageState extends State<TimerPage> {
         timer.cancel();
         setState(() {
           isRunning = false;
+          completedWorkouts.add(currentWorkoutIndex);
+
+          if (currentWorkoutIndex < widget.workout.length - 1) {
+            currentWorkoutIndex++;
+            seconds = 30;
+          }
         });
       }
     });
@@ -58,6 +57,8 @@ class _TimerPageState extends State<TimerPage> {
     stopTimer();
     setState(() {
       seconds = 30;
+      currentWorkoutIndex = 0;
+      completedWorkouts.clear();
     });
   }
 
@@ -123,7 +124,6 @@ class _TimerPageState extends State<TimerPage> {
                           vertical: 8,
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 5),
-
                         child: Text(
                           entry.key,
                           style: TextStyle(
@@ -168,12 +168,61 @@ class _TimerPageState extends State<TimerPage> {
               ),
             ),
             const SizedBox(height: 30),
-            IconButton(
-              onPressed: isRunning ? stopTimer : startTimer,
-              icon: Icon(
-                isRunning ? Icons.pause_circle : Icons.play_circle,
-                size: 60,
-                color: Colors.green,
+            Padding(
+              padding: const EdgeInsets.only(left: 100),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: isRunning ? stopTimer : startTimer,
+                    icon: Icon(
+                      isRunning ? Icons.pause_circle : Icons.play_circle,
+                      size: 60,
+                      color: Colors.green,
+                    ),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 120,
+                      maxWidth: 100,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white.withOpacity(0.2),
+                      ),
+                      child: ListView.separated(
+                        separatorBuilder:
+                            (context, index) => const SizedBox(height: 2),
+                        itemCount: widget.workout.length,
+                        itemBuilder: (context, index) {
+                          Color tileColor;
+                          if (completedWorkouts.contains(index)) {
+                            tileColor = Colors.green;
+                          } else if (index == currentWorkoutIndex) {
+                            tileColor = Colors.orange;
+                          } else {
+                            tileColor = Colors.grey;
+                          }
+
+                          return Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: tileColor,
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                widget.workout[index],
+                                style: commentStyle(15, Colors.white),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
@@ -185,7 +234,19 @@ class _TimerPageState extends State<TimerPage> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Text("Finish"),
+              child: InkWell(
+                onTap: () async {
+                  final data = Setgoal(
+                    day:
+                        setGoalCardListener.value.isNotEmpty
+                            ? setGoalCardListener.value.last.day + 1
+                            : 1,
+                  );
+
+                  await setGoalCardUpdate(data);
+                },
+                child: const Text("Finish"),
+              ),
             ),
             const Spacer(),
             Padding(

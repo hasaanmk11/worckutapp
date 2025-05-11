@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Container WeightFil() {
+Container WeightFil(TextEditingController ctr) {
   return Container(
     height: 40,
     decoration: BoxDecoration(
@@ -11,9 +11,10 @@ Container WeightFil() {
       children: [
         Expanded(
           child: TextField(
-            obscureText: true,
+            controller: ctr,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              hintText: 'Weight(km)',
+              hintText: 'Weight (kg)',
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,

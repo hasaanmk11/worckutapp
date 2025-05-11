@@ -1,4 +1,5 @@
 import 'package:app/pages/mealPlan/activities/activitie.dart';
+
 import 'package:flutter/material.dart';
 
 class activityCard extends StatelessWidget {

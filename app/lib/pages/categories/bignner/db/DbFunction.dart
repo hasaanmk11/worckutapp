@@ -5,11 +5,14 @@ import 'package:hive_flutter/adapters.dart';
 String boxName = "WorckoutDb";
 
 final ValueNotifier<List<Bignnermodel>> getDataByLisner = ValueNotifier([]);
+final ValueNotifier<List<Bignnermodel>> setGoalListener = ValueNotifier([]);
+ValueNotifier<List<dynamic>> filteredGoalsNotifier = ValueNotifier([]);
 
 class BignnerDb {
   static Future<void> addBignner(Bignnermodel data) async {
     final box = await Hive.openBox<Bignnermodel>(boxName);
     await box.add(data);
+    await getDataWithId(data.categoryId);
   }
 }
 
@@ -20,6 +23,9 @@ getDataWithId(int id) async {
       box.values.where((categoryID) => categoryID.categoryId == id).toList();
 
   getDataByLisner.value = filltered;
+  setGoalListener.value = filltered;
+  filteredGoalsNotifier.value = List.from(filltered);
+  filteredGoalsNotifier.notifyListeners();
 }
 
 deleteCrad(int id, int categoryId) async {
@@ -34,6 +40,7 @@ deleteCrad(int id, int categoryId) async {
 
     await box.deleteAt(index);
     await getDataWithId(categoryId);
+    filteredGoalsNotifier.notifyListeners();
   }
 }
 
@@ -46,4 +53,5 @@ Future<void> updateItem(Bignnermodel updatedItem) async {
 
   await db.put(key, updatedItem);
   await getDataWithId(updatedItem.categoryId);
+  filteredGoalsNotifier.notifyListeners();
 }

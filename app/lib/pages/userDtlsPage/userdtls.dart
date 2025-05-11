@@ -1,10 +1,29 @@
+import 'dart:io';
+
+import 'package:app/pages/userDtlsPage/db/db.dart';
+import 'package:app/pages/userDtlsPage/model/heigth_weigth.dart';
 import 'package:app/pages/userDtlsPage/widgets/height.dart';
 import 'package:app/pages/userDtlsPage/widgets/weight.dart';
-import 'package:app/pages/welcomePage/welcome.dart';
-import 'package:flutter/material.dart';
 
-class dtls extends StatelessWidget {
-  const dtls({super.key});
+
+import 'package:app/pages/welcomePage/welcome.dart';
+
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
+class dtls extends StatefulWidget {
+  dtls({super.key});
+
+  @override
+  State<dtls> createState() => _dtlsState();
+}
+
+class _dtlsState extends State<dtls> {
+  final TextEditingController heightCtr = TextEditingController();
+
+  final TextEditingController weightCtr = TextEditingController();
+
+  var userimage;
 
   @override
   Widget build(BuildContext context) {
@@ -27,29 +46,61 @@ class dtls extends StatelessWidget {
                     color: const Color.fromARGB(255, 191, 190, 190),
                     borderRadius: BorderRadius.circular(50),
                   ),
-                  child: Center(child: Icon(Icons.person)),
+                  child:
+                      userimage == null
+                          ? const Center(child: Icon(Icons.person, size: 40))
+                          : ClipOval(
+                            child: Image.file(
+                              userimage,
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 100,
+                            ),
+                          ),
                 ),
-                SizedBox(height: 50),
-                Container(
-                  width: 100,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Center(child: Text("pick image")),
-                ),
-                SizedBox(height: 50),
-                HeightFld(),
-                SizedBox(height: 50),
-                WeightFil(),
                 SizedBox(height: 50),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    final XFile? pickedFile = await getImage();
+                    if (pickedFile != null) {
+                      setState(() {
+                        userimage = File(pickedFile.path);
+                      });
+                    }
+                  },
+
+                  child: Container(
+                    width: 100,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(child: Text("pick image")),
+                  ),
+                ),
+                SizedBox(height: 50),
+                HeightFld(heightCtr),
+                SizedBox(height: 50),
+                WeightFil(weightCtr),
+                SizedBox(height: 50),
+                InkWell(
+                  onTap: () async {
+                    print(heightCtr.text);
+                    print(weightCtr.text);
+                    print("printed w and H");
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => welcome()),
                       (route) => false,
                     );
+
+                    final data = HeigthWeigth(
+                      imagePath: userimage.path,
+                      heigth: heightCtr.text,
+                      weigth: weightCtr.text,
+                    );
+
+                    await addHeigthAndWeigth(data);
                   },
                   child: Container(
                     width: 100,
@@ -68,4 +119,12 @@ class dtls extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<XFile?> getImage() async {
+  final ImagePicker picker = ImagePicker();
+  final XFile? pickedImage = await picker.pickImage(
+    source: ImageSource.gallery,
+  );
+  return pickedImage;
 }

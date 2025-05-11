@@ -11,6 +11,7 @@ Future<void> addUser(UserModel model) async {
 
 Future<bool> checkUser() async {
   final box = await Hive.openBox<UserModel>(boxName);
+  userDtlsListener.value = box.values.toList();
   return box.containsKey(userId);
 }
 

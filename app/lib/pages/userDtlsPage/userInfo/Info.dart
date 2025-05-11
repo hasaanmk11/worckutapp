@@ -1,6 +1,14 @@
+import 'dart:io';
+import 'dart:ui';
+import 'package:app/pages/loginPage/const/consts.dart';
 import 'package:app/pages/loginPage/db/db_function.dart';
-import 'package:app/pages/loginPage/login.dart';
-import 'package:app/styles/cmn.dart';
+
+import 'package:app/pages/setGoals/setGoalTimer/db/db.dart';
+
+import 'package:app/pages/userDtlsPage/db/db.dart';
+import 'package:app/pages/userDtlsPage/widgets/floting_button.dart';
+import 'package:app/pages/userDtlsPage/widgets/info-tittle.dart';
+
 import 'package:flutter/material.dart';
 
 class Info extends StatefulWidget {
@@ -10,126 +18,148 @@ class Info extends StatefulWidget {
   State<Info> createState() => _InfoState();
 }
 
-class _InfoState extends State<Info> {
+class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fade;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _controller.forward();
+    getDataFromHeigthAndWeigth();
+    checkUser();
+    setGoalCardGetData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: InkWell(
-        onTap: () async {
-          showDialog(
-            context: context,
-            builder:
-                (context) => AlertDialog(
-                  title: Text("Are youn sure."),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        await deleteUser();
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => const Login(),
-                          ),
-                          (Route<dynamic> route) => false,
-                        );
-                      },
-                      child: Text("Yes"),
-                    ),
-                  ],
-                ),
-          );
-        },
-        child: Container(
-          width: 100,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.red,
-          ),
-          child: Center(
-            child: Text("Logout", style: commentStyle(20, Colors.white)),
+      floatingActionButton: FlotingActionButtonPage(),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF1FA2FF), Color(0xFF12D8FA), Color(0xFFA6FFCB)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 223, 223, 223),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width - 30,
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Center(child: Icon(Icons.person)),
-                            width: 70,
-                            height: 70,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Color.fromARGB(255, 223, 223, 223),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text("Profile"),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "UserName",
-                        style: TextStyle(
-                          color: const Color.fromARGB(187, 160, 160, 160),
-                        ),
-                      ),
-                      Text(
-                        "Goal Level",
-                        style: TextStyle(
-                          color: const Color.fromARGB(187, 160, 160, 160),
-                        ),
-                      ),
-                      Text(
-                        "Height",
-                        style: TextStyle(
-                          color: const Color.fromARGB(187, 160, 160, 160),
-                        ),
-                      ),
-                      Text(
-                        "Weight",
-                        style: TextStyle(
-                          color: const Color.fromARGB(187, 160, 160, 160),
-                        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fade,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: Colors.white.withOpacity(0.3)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
-                  SizedBox(width: 30),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("User"),
-                      Text("4 days"),
-                      Text("176(cm)"),
-                      Text("76(kg)"),
-                    ],
+                  child: ValueListenableBuilder(
+                    valueListenable: userDtlsListener,
+                    builder: (context, value, child) {
+                      final data = value[0].username;
+                      print("userNmae ${data}");
+
+                      return ValueListenableBuilder(
+                        valueListenable: heigthAndWeigthListener,
+                        builder: (context, heigthAndWeigth, child) {
+                          if (heigthAndWeigth.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No height and weight data found.",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            );
+                          }
+
+                          final h = heigthAndWeigth[0].heigth.toString();
+                          final w = heigthAndWeigth[0].weigth.toString();
+                          final image = heigthAndWeigth[0].imagePath;
+                          print(
+                            "images "
+                            "$image",
+                          );
+
+                          return ValueListenableBuilder(
+                            valueListenable: setGoalCardListener,
+                            builder: (context, goalDya, child) {
+                              String goalDyas = "N/A";
+
+                              if (goalDya.isNotEmpty) {
+                                goalDyas = goalDya.last.day.toString();
+                              }
+
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundColor: Colors.white,
+                                    child:
+                                        image.isEmpty
+                                            ? const Icon(
+                                              Icons.person,
+                                              size: 50,
+                                              color: Colors.grey,
+                                            )
+                                            : ClipOval(
+                                              child: Image.file(
+                                                File(image),
+                                                fit: BoxFit.cover,
+                                                width: 100,
+                                                height: 100,
+                                              ),
+                                            ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Text(
+                                    "User Profile",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  infoTile("Username", data),
+                                  infoTile("Goal Level", goalDyas),
+                                  infoTile("Height", h),
+                                  infoTile("Weight", w),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

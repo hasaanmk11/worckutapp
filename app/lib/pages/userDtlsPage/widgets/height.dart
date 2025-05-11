@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Container HeightFld() {
+Container HeightFld(TextEditingController heightCntr) {
   return Container(
     height: 40,
     decoration: BoxDecoration(
@@ -11,9 +11,10 @@ Container HeightFld() {
       children: [
         Expanded(
           child: TextField(
-            obscureText: true,
+            controller: heightCntr,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              hintText: 'Height(cm)',
+              hintText: 'Height (cm)',
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,

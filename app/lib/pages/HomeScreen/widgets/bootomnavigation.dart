@@ -1,6 +1,6 @@
-import 'package:app/pages/Calculator/cal.dart';
 import 'package:app/pages/HomeScreen/home.dart';
 import 'package:app/pages/HomeScreen/widgets/wd.dart';
+import 'package:app/pages/calculator/cal.dart';
 import 'package:app/pages/categories/categories.dart';
 import 'package:app/pages/search/search.dart';
 import 'package:flutter/material.dart';

@@ -1,17 +1,33 @@
-import 'package:app/pages/Calculator/cal.dart';
+import 'package:app/pages/HomeScreen/function/reminderbuttoncheck.dart';
 import 'package:app/pages/HomeScreen/widgets/appBarIcons.dart';
 import 'package:app/pages/HomeScreen/widgets/bootomnavigation.dart';
 import 'package:app/pages/HomeScreen/widgets/worckutCard.dart';
-import 'package:app/pages/mealPlan/meal.dart';
+import 'package:app/pages/calculator/cal.dart';
 
 import 'package:app/pages/categories/categories.dart';
-
+import 'package:app/pages/mealPlan/meal.dart';
 import 'package:app/pages/setGoals/setgoals.dart';
+
+import 'package:app/pages/transformation/functions/weekendnotifi.dart';
+import 'package:app/pages/transformation/transformation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  @override
+  void initState() {
+    super.initState();
+    initReminderCheck();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +118,19 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 100),
+              InkWell(
+                onTap:
+                    () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => WeeklyPhotoScreen(),
+                      ),
+                    ),
+                child: buildWorkoutCard(
+                  context,
+                  "assets/home5.jpg",
+                  "Transformation",
+                ),
+              ),
             ],
           ),
         ),

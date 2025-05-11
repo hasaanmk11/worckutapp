@@ -1,3 +1,4 @@
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
 import 'package:flutter/material.dart';
 
 class DropdownButtons extends StatefulWidget {
@@ -8,31 +9,52 @@ class DropdownButtons extends StatefulWidget {
 }
 
 class _DropdownButtonsState extends State<DropdownButtons> {
-  String selectedLevel = "Advanced";
+  String selectedLevel = "Choose";
+
+  final List<String> levels = [
+    "Choose",
+    "Beginner",
+    "Intermediate",
+    "Advanced",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: DropdownButton<String>(
         value: selectedLevel,
-
+        isExpanded: true,
+        underline: const SizedBox(),
         icon: const Icon(Icons.keyboard_arrow_down),
         items:
-            ["Beginner", "Intermediate", "Advanced"]
-                .map(
-                  (level) => DropdownMenuItem(value: level, child: Text(level)),
-                )
-                .toList(),
+            levels.map((level) {
+              return DropdownMenuItem(
+                value: level,
+                child: Text(level, style: const TextStyle(fontSize: 16)),
+              );
+            }).toList(),
         onChanged: (value) {
-          if (value != null) {
-            setState(() {
-              selectedLevel = value;
-            });
+          setState(() {
+            selectedLevel = value!;
+          });
+
+          switch (value) {
+            case "Beginner":
+              getDataWithId(1);
+              break;
+            case "Intermediate":
+              getDataWithId(2);
+              break;
+            case "Advanced":
+              getDataWithId(3);
+              break;
+            default:
+              break;
           }
         },
       ),

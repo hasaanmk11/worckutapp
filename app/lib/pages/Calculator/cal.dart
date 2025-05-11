@@ -1,7 +1,7 @@
-import 'package:app/pages/Calculator/function/fn.dart';
-import 'package:app/pages/Calculator/widgets/resultPage.dart';
-import 'package:app/pages/Calculator/widgets/tab.dart';
-import 'package:app/pages/Calculator/widgets/wd.dart';
+import 'package:app/pages/calculator/function/fn.dart';
+import 'package:app/pages/calculator/widgets/resultPage.dart';
+import 'package:app/pages/calculator/widgets/tab.dart';
+import 'package:app/pages/calculator/widgets/wd.dart';
 import 'package:flutter/material.dart';
 
 class Calculator extends StatefulWidget {

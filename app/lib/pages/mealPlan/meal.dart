@@ -1,6 +1,4 @@
-import 'package:app/pages/mealPlan/activities/activitie.dart';
 
-import 'package:app/pages/mealPlan/mealAdd.dart';
 import 'package:app/pages/mealPlan/activities/activitycard.dart';
 
 import 'package:app/pages/mealPlan/widgets/weighgtgaincard.dart';

@@ -1,5 +1,6 @@
-import 'package:app/pages/categories/bignner/beginners.dart';
-import 'package:app/pages/categories/db_listeners/db.dart';
+import 'dart:io';
+
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/selectButton.dart';
 import 'package:app/pages/setGoals/addWorckut/widgets/wd.dart';
 
@@ -15,18 +16,81 @@ class AddWorkoutInSetGoal extends StatefulWidget {
 
 class _AddWorkoutInSetGoalState extends State<AddWorkoutInSetGoal> {
   List<int> selectedIndexes = [];
+  String selectedTime = 'beginner';
+  int dyachooser = 1;
+
+  @override
+  void initState() {
+    getDataWithId(1);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 207, 207, 207),
-
       body: Column(
         children: [
           TopImage(),
-          SelectButton(selectedIndexes: selectedIndexes),
+          SelectButton(selectedIndexes: selectedIndexes, day: dyachooser),
+          SizedBox(height: 10),
+          SizedBox(
+            width: 200,
+            height: 80,
+            child: DropdownButtonFormField<String>(
+              value: selectedTime,
+              decoration: const InputDecoration(
+                labelText: 'Choose Workout',
+                border: OutlineInputBorder(),
+              ),
+              items:
+                  ["beginner", "Advanced", "Intermediate"].map((difficulty) {
+                    return DropdownMenuItem(
+                      value: difficulty,
+                      child: Text(difficulty),
+                    );
+                  }).toList(),
+              onChanged: (val) {
+                if (val == 'beginner') {
+                  getDataWithId(1);
+                } else if (val == "Intermediate") {
+                  getDataWithId(2);
+                } else if (val == "Advanced") {
+                  getDataWithId(3);
+                }
+
+                setState(() {
+                  selectedTime = val!;
+                });
+              },
+            ),
+          ),
+          SizedBox(
+            width: 100,
+            height: 50,
+            child: DropdownButtonFormField<int>(
+              value: dyachooser,
+              decoration: const InputDecoration(
+                labelText: 'Choose Day',
+                border: OutlineInputBorder(),
+              ),
+              items: List.generate(
+                100,
+                (index) => DropdownMenuItem(
+                  value: index + 1,
+                  child: Text('${index + 1}'),
+                ),
+              ),
+              onChanged: (val) {
+                setState(() {
+                  dyachooser = val!;
+                });
+              },
+            ),
+          ),
+
           ValueListenableBuilder(
-            valueListenable: beginners,
+            valueListenable: setGoalListener,
             builder:
                 (context, value, child) => Expanded(
                   child:
@@ -43,28 +107,28 @@ class _AddWorkoutInSetGoalState extends State<AddWorkoutInSetGoal> {
                                     decoration: BoxDecoration(
                                       color:
                                           selectedIndexes.contains(index)
-                                              ? Colors.blueGrey
-                                              : const Color.fromARGB(
-                                                255,
-                                                60,
-                                                135,
-                                                255,
-                                              ),
+                                              ? Colors.blueAccent
+                                              : Colors.grey,
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     child: Row(
                                       children: [
-                                        const Padding(
+                                        Padding(
                                           padding: EdgeInsets.only(left: 30),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: DecoratedBox(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+
+                                            child: Container(
                                               decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(20),
-                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              width: 50,
+                                              height: 50,
+                                              child: Image.file(
+                                                File(value[index].image),
                                               ),
                                             ),
                                           ),
@@ -81,7 +145,7 @@ class _AddWorkoutInSetGoalState extends State<AddWorkoutInSetGoal> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  value[index].name,
+                                                  value[index].workoutName,
                                                   style: commentStyle(
                                                     20,
                                                     Colors.white,

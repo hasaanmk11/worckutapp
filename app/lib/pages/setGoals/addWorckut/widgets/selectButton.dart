@@ -1,11 +1,18 @@
-import 'package:app/pages/categories/db_listeners/db.dart';
+import 'package:app/pages/categories/bignner/db/DbFunction.dart';
+
 import 'package:app/pages/setGoals/startWorckut/start.dart';
+
 import 'package:flutter/material.dart';
 
 class SelectButton extends StatelessWidget {
-  const SelectButton({super.key, required this.selectedIndexes});
+  const SelectButton({
+    super.key,
+    required this.selectedIndexes,
+    required this.day,
+  });
 
   final List<int> selectedIndexes;
+  final int day;
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +30,15 @@ class SelectButton extends StatelessWidget {
                     builder: (context) {
                       final selectedWorkouts =
                           selectedIndexes
-                              .map((i) => beginners.value[i].name)
+                              .map((i) => setGoalListener.value[i].workoutName)
                               .toList();
-                      return Start(workout: selectedWorkouts);
+                      return Start(workout: selectedWorkouts, day: day);
                     },
                   ),
                 );
               },
               child: Container(
-                width: 100,
+                width: 80,
                 height: 40,
                 decoration: BoxDecoration(
                   color: Colors.white,

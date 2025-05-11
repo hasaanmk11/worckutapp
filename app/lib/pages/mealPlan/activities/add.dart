@@ -1,6 +1,8 @@
 import 'dart:io' show File;
+
 import 'package:app/pages/mealPlan/activities/activityModel/activity_model.dart';
 import 'package:app/pages/mealPlan/activities/db/activity_db_functions.dart';
+
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -148,7 +150,7 @@ class _ActivitieState extends State<Addactivity> {
                         ElevatedButton(
                           onPressed: () async {
                             final data = ActivityModel(
-                              image: pickedImage!.path, // Save the file path
+                              image: pickedImage!.path, 
                               activity: selectedActivity,
                               time: selectedTime.toString(),
                               id: DateTime.now().millisecondsSinceEpoch,

@@ -39,6 +39,7 @@ dependencies:
   icons_plus: ^5.0.0
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.1
+  shared_preferences: ^2.2.2
   build_runner: ^2.4.15
   youtube_player_flutter: ^9.1.1
 
@@ -88,6 +89,7 @@ flutter:
     - assets/setGoal.png
     - assets/addSetGoal.png
     - assets/goalworckut.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

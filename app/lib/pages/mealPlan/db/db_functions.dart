@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:app/pages/categories/bignner/model/bignnermodel.dart';
 import 'package:app/pages/mealPlan/model/MealModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +13,6 @@ class MealPlanDbFunctions {
   static Future<void> addMealToWeightGainAndLoos(Mealmodel meal) async {
     final box = await Hive.openBox<Mealmodel>(boxName);
     await box.add(meal);
-   
   }
 }
 
