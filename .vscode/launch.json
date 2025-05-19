@@ -9,21 +9,23 @@
       "cwd": "app",
       "request": "launch",
       "type": "dart",
-      "program": "lib/mainFunction.dart"
+      "program": "lib/main_function.dart"
     },
     {
       "name": "app (profile mode)",
       "cwd": "app",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "flutterMode": "profile",
+      "program": "lib/main_function.dart"
     },
     {
       "name": "app (release mode)",
       "cwd": "app",
       "request": "launch",
       "type": "dart",
-      "flutterMode": "release"
+      "flutterMode": "release",
+      "program": "lib/main_function.dart"
     }
   ]
 }
