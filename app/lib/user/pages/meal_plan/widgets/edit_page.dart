@@ -1,5 +1,3 @@
-
-
 import 'package:app/admin/pages/meal_planner/db/db_function.dart';
 import 'package:app/admin/pages/meal_planner/model/MealModel.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +24,7 @@ void editPage(
   final TextEditingController FatController = TextEditingController(text: fat);
 
   String selectedTime = "Morning";
-  int selectedValue1 = 1;
-  int selectedValue2 = 1;
+
   List<String> time = ["Morning", "AfterNoon", "Evening", "Night"];
 
   showDialog(
@@ -45,18 +42,8 @@ void editPage(
               children: [
                 Text("Add Food", style: commentStyle(20, Colors.black)),
                 SizedBox(height: 12),
-                Container(
-                  width: MediaQuery.of(context).size.width - 60,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(Icons.fastfood, size: 60),
-                ),
+
                 SizedBox(height: 8),
-                Text("Pick Image", style: commentStyle(16, Colors.black)),
-                SizedBox(height: 16),
 
                 TextField(
                   controller: FoodController,
@@ -69,7 +56,7 @@ void editPage(
 
                 Align(
                   alignment: Alignment.topRight,
-                  child: Container(
+                  child: SizedBox(
                     width: 150,
                     height: 60,
                     child: DropdownButtonFormField<String>(

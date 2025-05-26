@@ -1,15 +1,21 @@
+import 'dart:typed_data';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:app/styles/cmn.dart';
 import 'package:app/admin/pages/meal_planner/activitie/Model/activity_model.dart';
 import 'package:app/admin/pages/meal_planner/activitie/db/activity_db_functions.dart';
-import 'package:flutter/material.dart';
 
 class EditActivity extends StatefulWidget {
   final String initialActivity;
   final int initialTime;
   final int id;
+  final Object? image;
 
   const EditActivity({
+    required this.image,
     required this.initialActivity,
     required this.initialTime,
     required this.id,
@@ -24,6 +30,10 @@ class _EditActivityState extends State<EditActivity> {
   late String selectedActivity;
   late int selectedTime;
   late int ids;
+  String? imagePath;
+  Uint8List? imageBytes;
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -31,6 +41,43 @@ class _EditActivityState extends State<EditActivity> {
     selectedActivity = widget.initialActivity;
     selectedTime = widget.initialTime;
     ids = widget.id;
+
+    if (widget.image is Uint8List) {
+      imageBytes = widget.image as Uint8List;
+    } else if (widget.image is String) {
+      imagePath = widget.image as String;
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      final bytes = await picked.readAsBytes();
+      setState(() {
+        imageBytes = bytes;
+        imagePath = null;
+      });
+    }
+  }
+
+  Widget _buildImagePreview() {
+    if (imageBytes != null) {
+      return Image.memory(
+        imageBytes!,
+        height: 100,
+        width: 100,
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath != null) {
+      return Image.file(
+        File(imagePath!),
+        height: 100,
+        width: 100,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return const Text("No image selected");
+    }
   }
 
   @override
@@ -42,6 +89,15 @@ class _EditActivityState extends State<EditActivity> {
           children: [
             Text("Edit Activity", style: commentStyle(18, Colors.black)),
             const SizedBox(height: 20),
+
+            _buildImagePreview(),
+            TextButton.icon(
+              onPressed: _pickImage,
+              icon: const Icon(Icons.image),
+              label: const Text("Change Image"),
+            ),
+            const SizedBox(height: 20),
+
             DropdownButtonFormField<String>(
               value: selectedActivity,
               decoration: const InputDecoration(
@@ -62,6 +118,7 @@ class _EditActivityState extends State<EditActivity> {
               },
             ),
             const SizedBox(height: 20),
+
             DropdownButtonFormField<int>(
               value: selectedTime,
               decoration: const InputDecoration(
@@ -82,14 +139,17 @@ class _EditActivityState extends State<EditActivity> {
               },
             ),
             const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () async {
                 final data = ActivityModel(
-                  image: "",
                   id: ids,
                   activity: selectedActivity,
                   time: selectedTime.toString(),
+                  imageBytes: imageBytes,
+                  imagePath: imagePath,
                 );
+
                 editeActivity(ids, data);
                 Navigator.of(context).pop();
               },

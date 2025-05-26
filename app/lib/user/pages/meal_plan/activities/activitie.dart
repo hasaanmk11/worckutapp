@@ -1,10 +1,11 @@
 import 'dart:ui';
-
+import 'package:app/responsive/home_screen_layouts.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:app/admin/pages/meal_planner/activitie/Model/activity_model.dart';
 import 'package:app/admin/pages/meal_planner/activitie/db/activity_db_functions.dart';
 import 'package:app/user/pages/meal_plan/activities/widgets/edit_image_delete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:hive_flutter/adapters.dart';
 
 class Activitie extends StatefulWidget {
@@ -24,172 +25,166 @@ class _ActivitieState extends State<Activitie> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xFF0D0D0D),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final layout = ScreenLayouts(constraints: constraints);
 
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ValueListenableBuilder(
-            valueListenable: getActivityDataByListeners,
-            builder: (context, value, child) {
-              return Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "Activities",
-                      style: commentStyle(20, Colors.white),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child:
-                        value.isEmpty
-                            ? const Center(
-                              child: Text(
-                                "No activities added yet",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                            : ListView.separated(
-                              itemCount: value.length,
-                              separatorBuilder:
-                                  (context, index) =>
-                                      const SizedBox(height: 20),
-                              itemBuilder: (context, index) {
-                                final activity = value[index];
-                                final box = Hive.box<ActivityModel>(boxName);
-                                final key = box.keyAt(index);
+          final crossAxisCount =
+              layout.isMobile
+                  ? 2
+                  : layout.isTablet
+                  ? 3
+                  : 4;
 
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                      sigmaX: 10,
-                                      sigmaY: 10,
-                                    ),
-                                    child: Container(
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        gradient: commenGradient().withOpacity(
-                                          0.4,
-                                        ),
-                                        border: Border.all(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.2,
-                                          ),
-                                          width: 1.5,
-                                        ),
+          return Scaffold(
+            backgroundColor: const Color(0xFF0D0D0D),
+            body: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ValueListenableBuilder(
+                valueListenable: getActivityDataByListeners,
+                builder: (context, value, child) {
+                  return Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          "Your Activities",
+                          style: commentStyle(24, Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Expanded(
+                        child:
+                            value.isEmpty
+                                ? const Center(
+                                  child: Text(
+                                    "No activities added yet",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )
+                                : GridView.builder(
+                                  itemCount: value.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: crossAxisCount,
+                                        crossAxisSpacing: 16,
+                                        mainAxisSpacing: 16,
+                                        childAspectRatio: 3 / 2,
                                       ),
-                                      padding: const EdgeInsets.all(16),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ActivityCardDtls(activity: activity),
-                                          Container(
-                                            width: 100,
-                                            height: 100,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black.withValues(
-                                                alpha: 0.3,
+                                  itemBuilder: (context, index) {
+                                    final activity = value[index];
+
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                          sigmaX: 8,
+                                          sigmaY: 8,
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            gradient: commenGradient()
+                                                .withOpacity(0.25),
+                                            border: Border.all(
+                                              color: Colors.white.withOpacity(
+                                                0.2,
                                               ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: Colors.white.withValues(
-                                                  alpha: 0.2,
+                                              width: 1.5,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.all(12),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: ActivityCardDtls(
+                                                  activity: activity,
+                                                  layout: layout,
                                                 ),
                                               ),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: ImageSection(
-                                                activity: activity,
+
+                                              const SizedBox(width: 8),
+
+                                              Flexible(
+                                                flex: 2,
+                                                child: AspectRatio(
+                                                  aspectRatio: 1,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                      border: Border.all(
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
+                                                      ),
+                                                    ),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            12,
+                                                          ),
+                                                      child: ImageSection(
+                                                        activity: activity,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
+                                    );
+                                  },
+                                ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
-//ActivityCardDtls
+
 class ActivityCardDtls extends StatelessWidget {
   const ActivityCardDtls({
     super.key,
     required this.activity,
+    required this.layout,
   });
 
   final ActivityModel activity;
+  final ScreenLayouts layout;
 
   @override
   Widget build(BuildContext context) {
+    final int fontSize =
+        layout.isMobile
+            ? 18
+            : layout.isTablet
+            ? 12
+            : 22;
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
-      mainAxisAlignment:
-          MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              "Activity Name:",
-              style: commentStyle(
-                16,
-                Colors.white70,
-              ),
-            ),
-            SizedBox(width: 3),
-            Text(
-              activity.activity,
-              style: commentStyle(
-                16,
-                Colors.white,
-              ),
-            ),
-          ],
+        Text(
+          activity.activity,
+          style: commentStyle(fontSize as double, Colors.white),
         ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Text(
-              "Time:",
-              style: commentStyle(
-                16,
-                Colors.white70,
-              ),
-            ),
-            SizedBox(width: 3),
-            Text(
-              activity.time,
-              style: commentStyle(
-                16,
-                Colors.white,
-              ),
-            ),
-            SizedBox(width: 3),
-            Text(
-              "minutes",
-              style: commentStyle(
-                16,
-                Colors.white70,
-              ),
-            ),
-          ],
+        const SizedBox(height: 6),
+        Text(
+          "Time: ${activity.time} minutes",
+          style: commentStyle(fontSize as double, Colors.white70),
         ),
       ],
     );

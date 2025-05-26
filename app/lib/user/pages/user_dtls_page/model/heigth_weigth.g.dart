@@ -17,6 +17,7 @@ class HeigthWeigthAdapter extends TypeAdapter<HeigthWeigth> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HeigthWeigth(
+      imageBytes: fields[3] as Uint8List?,
       imagePath: fields[2] as String,
       heigth: fields[0] as dynamic,
       weigth: fields[1] as dynamic,
@@ -26,13 +27,15 @@ class HeigthWeigthAdapter extends TypeAdapter<HeigthWeigth> {
   @override
   void write(BinaryWriter writer, HeigthWeigth obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.heigth)
       ..writeByte(1)
       ..write(obj.weigth)
       ..writeByte(2)
-      ..write(obj.imagePath);
+      ..write(obj.imagePath)
+      ..writeByte(3)
+      ..write(obj.imageBytes);
   }
 
   @override

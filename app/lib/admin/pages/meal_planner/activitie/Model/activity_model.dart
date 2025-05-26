@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:hive_flutter/adapters.dart';
 part 'activity_model.g.dart';
 
@@ -10,12 +12,16 @@ class ActivityModel {
   @HiveField(2)
   final int id;
   @HiveField(3)
-  final String image;
+    final String? imagePath;
+    @HiveField(4)
+    final Uint8List? imageBytes;
 
   ActivityModel({
-    required this.image,
+   
     required this.id,
     required this.activity,
     required this.time,
+    required this.imageBytes,
+    required this.imagePath
   });
 }

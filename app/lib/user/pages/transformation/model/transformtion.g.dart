@@ -17,6 +17,7 @@ class TransformtionAdapter extends TypeAdapter<Transformtion> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Transformtion(
+      imageBytes: fields[1] as Uint8List?,
       image: fields[0] as dynamic,
     );
   }
@@ -24,9 +25,11 @@ class TransformtionAdapter extends TypeAdapter<Transformtion> {
   @override
   void write(BinaryWriter writer, Transformtion obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.image);
+      ..write(obj.image)
+      ..writeByte(1)
+      ..write(obj.imageBytes);
   }
 
   @override

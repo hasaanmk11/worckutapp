@@ -1,5 +1,3 @@
-
-
 import 'dart:io';
 import 'dart:ui';
 
@@ -10,6 +8,7 @@ import 'package:app/user/pages/set_goals/set_goal_timer/db/db.dart';
 import 'package:app/user/pages/user_dtls_page/db/db.dart';
 import 'package:app/user/pages/user_dtls_page/widgets/floting_button.dart';
 import 'package:app/user/pages/user_dtls_page/widgets/info-tittle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Info extends StatefulWidget {
@@ -106,6 +105,9 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
                               final w = heigthAndWeigth[0].weigth.toString();
                               final image = heigthAndWeigth[0].imagePath;
 
+                              print(h);
+                              print(w);
+
                               return ValueListenableBuilder(
                                 valueListenable: setGoalCardListener,
                                 builder: (context, goalDya, child) {
@@ -128,6 +130,12 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
                                                   size: 50,
                                                   color: Colors.grey,
                                                 )
+                                                : kIsWeb
+                                                ? const Icon(
+                                                  Icons.person,
+                                                  size: 50,
+                                                  color: Colors.grey,
+                                                )
                                                 : ClipOval(
                                                   child: Image.file(
                                                     File(image),
@@ -137,6 +145,7 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
                                                   ),
                                                 ),
                                       ),
+
                                       const SizedBox(height: 20),
                                       const Text(
                                         "User Profile",
@@ -172,7 +181,9 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
               alignment: Alignment.topRight,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdminLoing(),));
+                  Navigator.of(
+                    context,
+                  ).push(MaterialPageRoute(builder: (context) => AdminLoing()));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

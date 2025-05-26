@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:hive_flutter/adapters.dart';
 part 'transformtion.g.dart';
 
@@ -5,5 +7,7 @@ part 'transformtion.g.dart';
 class Transformtion {
   @HiveField(0)
   final image;
-  Transformtion({required this.image});
+  @HiveField(1)
+   final Uint8List? imageBytes;
+  Transformtion({required this.imageBytes, this.image});
 }

@@ -17,17 +17,18 @@ class ActivityModelAdapter extends TypeAdapter<ActivityModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ActivityModel(
-      image: fields[3] as String,
       id: fields[2] as int,
       activity: fields[0] as String,
       time: fields[1] as String,
+      imageBytes: fields[4] as Uint8List?,
+      imagePath: fields[3] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ActivityModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.activity)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ActivityModelAdapter extends TypeAdapter<ActivityModel> {
       ..writeByte(2)
       ..write(obj.id)
       ..writeByte(3)
-      ..write(obj.image);
+      ..write(obj.imagePath)
+      ..writeByte(4)
+      ..write(obj.imageBytes);
   }
 
   @override

@@ -1,10 +1,8 @@
 import 'dart:io';
 
-
-
-
-import 'package:app/admin/pages/meal_planner/activitie/Model/activity_model.dart';
+import 'package:flutter/foundation.dart'; 
 import 'package:flutter/material.dart';
+import 'package:app/admin/pages/meal_planner/activitie/Model/activity_model.dart';
 
 class ImageSection extends StatelessWidget {
   const ImageSection({super.key, required this.activity});
@@ -13,20 +11,53 @@ class ImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        activity.image.isNotEmpty
-            ? ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.file(File(activity.image), fit: BoxFit.contain),
-            )
-            : const Text(
-              'Image not found',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-        SizedBox(height: 6),
-      ],
+    Widget imageWidget;
+
+    if (kIsWeb && activity.imageBytes != null) {
+      imageWidget = ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.memory(
+          activity.imageBytes!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 200,
+        ),
+      );
+    } else if (!kIsWeb &&
+        activity.imagePath != null &&
+        File(activity.imagePath!).existsSync()) {
+      imageWidget = ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.file(
+          File(activity.imagePath!),
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 200,
+        ),
+      );
+    } else {
+      imageWidget = Container(
+        height: 200,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Center(
+          child: Text(
+            'Image not found',
+            style: TextStyle(color: Colors.black54, fontSize: 12),
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 200),
+        child: imageWidget,
+      ),
     );
   }
 }

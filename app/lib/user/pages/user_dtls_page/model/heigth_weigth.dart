@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:hive_flutter/hive_flutter.dart';
 part 'heigth_weigth.g.dart';
 
@@ -9,7 +11,10 @@ class HeigthWeigth {
   final weigth;
   @HiveField(2)
   final String imagePath;
+  @HiveField(3)
+   final Uint8List? imageBytes;
   HeigthWeigth({
+    required this.imageBytes,
     required this.imagePath,
     required this.heigth,
     required this.weigth,

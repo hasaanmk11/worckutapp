@@ -18,7 +18,6 @@ ListView categorieCard(List<Bignnermodel> value, int categoryID) {
       final workout = value[index];
 
       return Container(
-        height: 160,
         margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -26,101 +25,92 @@ ListView categorieCard(List<Bignnermodel> value, int categoryID) {
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Flexible(
-                flex: 3,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => VideoFullScreen(videoUrl: workout.url),
-                      ),
-                    );
-                  },
-
-                  child: YouTubeVideo(workout: workout),
-                ),
-              ),
-              Column(children: [WorkoutImage(workout: workout)]),
-
-              const SizedBox(width: 16),
-
-              Flexible(
-                flex: 4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      workout.workoutName,
-                      style: commentStyle(20, Colors.white),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Text(
-                          "Duration:",
-                          style: commentStyle(16, Colors.white70),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Video Preview
+                SizedBox(
+                  width: 120,
+                  height: 90,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  VideoFullScreen(videoUrl: workout.url),
                         ),
-                        SizedBox(width: 3),
-                        Text(
-                          workout.time,
-                          style: commentStyle(16, Colors.white),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("Sets:", style: commentStyle(16, Colors.white70)),
-                        SizedBox(width: 3),
-                        Text(
-                          workout.set,
-                          style: commentStyle(16, Colors.white),
-                        ),
-                      ],
-                    ),
-
-                    Row(
-                      children: [
-                        Text("Rep:", style: commentStyle(16, Colors.white70)),
-                        SizedBox(width: 3),
-                        Text(
-                          workout.rep,
-                          style: commentStyle(16, Colors.white),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              Flexible(
-                flex: 1,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => VideoFullScreen(videoUrl: workout.url),
-                      ),
-                    );
-                  },
-                  child: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: commenColor(),
-                    child: const Icon(Icons.play_arrow, color: Colors.black),
+                      );
+                    },
+                    child: YouTubeVideo(workout: workout),
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(width: 12),
+
+                /// Image
+                // SizedBox(
+                //   width: 60,
+                //   height: 90,
+                //   child: WorkoutImage(workout: workout),
+                // ),
+                const SizedBox(width: 12),
+
+                /// Workout Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        workout.workoutName,
+                        style: commentStyle(18, Colors.white),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Duration: ${workout.time}",
+                        style: commentStyle(14, Colors.white70),
+                      ),
+                      Text(
+                        "Sets: ${workout.set}",
+                        style: commentStyle(14, Colors.white70),
+                      ),
+                      Text(
+                        "Rep: ${workout.rep}",
+                        style: commentStyle(14, Colors.white70),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                /// Play Button
+                Align(
+                  alignment: Alignment.topRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  VideoFullScreen(videoUrl: workout.url),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: commenColor(),
+                      child: const Icon(Icons.play_arrow, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );

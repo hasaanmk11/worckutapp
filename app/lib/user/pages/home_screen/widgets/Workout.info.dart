@@ -1,8 +1,11 @@
+
+import 'package:app/responsive/screen_utils.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget buildWorkoutInfo(String title) {
+Widget buildWorkoutInfo(String title,  BuildContext ctx) {
+  
   return Expanded(
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
@@ -10,12 +13,13 @@ Widget buildWorkoutInfo(String title) {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          Flexible(
+            child: Text(
+              title,
+              style: commentStyle(20, Colors.white),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              softWrap: true,
             ),
           ),
           const SizedBox(height: 8),
@@ -25,14 +29,7 @@ Widget buildWorkoutInfo(String title) {
               color: commenColor(),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Text(
-              'Track Now',
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child: Text('Track Now', style: commentStyle(12, Colors.black)),
           ),
         ],
       ),

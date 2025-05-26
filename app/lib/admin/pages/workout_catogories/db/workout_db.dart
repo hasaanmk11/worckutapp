@@ -21,6 +21,7 @@ class BignnerDb {
 getDataWithId(int id) async {
   final box = await Hive.openBox<Bignnermodel>(boxName);
 
+
   List<Bignnermodel> filltered =
       box.values.where((categoryID) => categoryID.categoryId == id).toList();
 

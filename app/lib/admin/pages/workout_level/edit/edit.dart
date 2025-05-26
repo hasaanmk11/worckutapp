@@ -1,3 +1,4 @@
+import 'package:app/admin/const/const.dart';
 import 'package:app/admin/pages/workout_catogories/db/workout_db.dart';
 import 'package:app/admin/pages/workout_catogories/model/model.dart';
 
@@ -8,6 +9,8 @@ void editeCard(BuildContext context, Bignnermodel Items) {
     text: Items.workoutName,
   );
 
+  final TextEditingController _youtubeUrlController = TextEditingController();
+  const String urlHint = 'https://www.youtube.com/watch?v=...';
   int selectedTime = 5;
   int SetChooser = 1;
   int RepChooser = 1;
@@ -43,6 +46,30 @@ void editeCard(BuildContext context, Bignnermodel Items) {
 
                     border: OutlineInputBorder(),
                   ),
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  controller: _youtubeUrlController,
+                  style: const TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    labelText: 'YouTube Video URL',
+                    labelStyle: const TextStyle(color: Colors.black),
+                    hintText: urlHint,
+                    hintStyle: const TextStyle(color: Colors.white38),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  validator: (value) {
+                    final regExp = RegExp(pattern);
+                    if (!regExp.hasMatch(value!)) {
+                      return 'Enter a valid YouTube URL';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 16),
 
@@ -112,7 +139,7 @@ void editeCard(BuildContext context, Bignnermodel Items) {
                       workoutName: textController.text,
                       categoryId: Items.categoryId,
                       id: Items.id,
-                      url: '',
+                      url: _youtubeUrlController.text,
                     );
                     updateItem(data);
 

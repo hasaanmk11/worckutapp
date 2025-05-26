@@ -43,6 +43,7 @@ dependencies:
   shared_preferences: ^2.2.2
   build_runner: ^2.4.15
   youtube_player_flutter: ^9.1.1
+  responsive_builder: ^0.7.1
 
   webview_flutter: ^4.11.0
   image_picker: ^1.1.2
@@ -73,9 +74,9 @@ flutter:
     - assets/user.png
     - assets/padlock.png
     - assets/notofication.png
-    - assets/home1.jpg
     - assets/home2.webp
     - assets/home3.jpg
+
     - assets/home4.jpeg
     - assets/home5.jpg
     - assets/catgry1.png
@@ -93,11 +94,12 @@ flutter:
     - assets/goalworckut.png
     - assets/bg.jpg
     - assets/beignner.png
+    - assets/start.jpeg
     - assets/setgoalbg.png
     - assets/intermediate.png
     - assets/logo.png
     - assets/advanced.png
-
+    - assets/splash.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

@@ -24,7 +24,7 @@ class _AppBarIconsState extends State<AppBarIcons> {
                 context,
               ).push(MaterialPageRoute(builder: (context) => const Info()));
             },
-            child: const Icon(Icons.person, color: Colors.black, size: 30),
+            child: const Icon(Icons.person, color: Colors.white, size: 30),
           ),
         ),
 
@@ -60,7 +60,7 @@ class _AppBarIconsState extends State<AppBarIcons> {
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   blurRadius: 6,
                                   spreadRadius: 2,
                                   offset: const Offset(0, 3),

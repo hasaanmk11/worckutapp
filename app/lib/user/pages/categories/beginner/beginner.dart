@@ -1,7 +1,6 @@
 import 'package:app/admin/pages/workout_catogories/db/workout_db.dart';
 import 'package:app/admin/pages/workout_catogories/model/model.dart';
 
-
 import 'package:app/user/pages/categories/beginner/widgets/tittle_card.dart';
 import 'package:app/user/pages/categories/widgets/ctgry_crad/crad.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class _BeginnersState extends State<Beginners> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: beginnerScreenTittleCrad(),
+                  child: BeginnerScreenTitleCard(),
                 ),
                 const SizedBox(height: 40),
 

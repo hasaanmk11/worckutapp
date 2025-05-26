@@ -1,12 +1,11 @@
 import 'dart:io';
 
-
 import 'package:app/admin/pages/workout_catogories/db/workout_db.dart';
 import 'package:app/styles/cmn.dart';
-
 import 'package:app/user/pages/set_goals/addWorckut/widgets/selectButton.dart';
 import 'package:app/user/pages/set_goals/add_workout/widgets/wd.dart';
 import 'package:flutter/material.dart';
+import 'package:app/responsive/home_screen_layouts.dart';
 
 class AddWorkoutInSetGoal extends StatefulWidget {
   const AddWorkoutInSetGoal({super.key});
@@ -20,198 +19,249 @@ class _AddWorkoutInSetGoalState extends State<AddWorkoutInSetGoal> {
   String selectedTime = 'beginner';
   int dyachooser = 1;
 
+  late ScreenLayouts layouts;
+
   @override
   void initState() {
-    getDataWithId(1);
     super.initState();
+    getDataWithId(1);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          TopImage(),
-          SelectButton(selectedIndexes: selectedIndexes, day: dyachooser),
-          SizedBox(height: 10),
-          SizedBox(
-            width: 200,
-            height: 80,
-            child: DropdownButtonFormField<String>(
-              value: selectedTime,
-              decoration: InputDecoration(
-                labelText: 'Choose Workout',
-                labelStyle: TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent),
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        layouts = ScreenLayouts(constraints: constraints);
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: layouts.isWeb ? 60 : 20,
+                vertical: 10,
               ),
-              dropdownColor: Colors.grey[900],
-              style: TextStyle(color: Colors.white),
-              items:
-                  ["beginner", "Advanced", "Intermediate"].map((difficulty) {
-                    return DropdownMenuItem(
-                      value: difficulty,
-                      child: Text(difficulty),
-                    );
-                  }).toList(),
-              onChanged: (val) {
-                if (val == 'beginner') {
-                  getDataWithId(1);
-                } else if (val == "Intermediate") {
-                  getDataWithId(2);
-                } else if (val == "Advanced") {
-                  getDataWithId(3);
-                }
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height:
+                        layouts.isWeb
+                            ? 220
+                            : layouts.isTablet
+                            ? 180
+                            : 140,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: AssetImage("assets/addSetGoal.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
 
-                setState(() {
-                  selectedTime = val!;
-                });
-              },
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            height: 50,
-            child: DropdownButtonFormField<int>(
-              value: dyachooser,
-              decoration: InputDecoration(
-                labelText: 'Choose Day',
-                labelStyle: TextStyle(color: Colors.white),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blueAccent),
-                ),
-              ),
-              dropdownColor: Colors.grey[900],
-              style: TextStyle(color: Colors.white),
-              items: List.generate(
-                100,
-                (index) => DropdownMenuItem(
-                  value: index + 1,
-                  child: Text('${index + 1}'),
-                ),
-              ),
-              onChanged: (val) {
-                setState(() {
-                  dyachooser = val!;
-                });
-              },
-            ),
-          ),
+                  const SizedBox(height: 20),
 
-          ValueListenableBuilder(
-            valueListenable: setGoalListener,
-            builder:
-                (context, value, child) => Expanded(
-                  child:
-                      value.isEmpty
-                          ? const Center(child: Text("Not Added"))
-                          : ListView.separated(
-                            separatorBuilder:
-                                (context, index) => const SizedBox(height: 20),
-                            itemCount: value.length,
-                            itemBuilder:
-                                (context, index) => GestureDetector(
-                                  child: Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white..withValues(),
-                                      ),
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: commenGradient().withOpacity(
-                                        0.4,
-                                      ),
+                  SelectButton(
+                    selectedIndexes: selectedIndexes,
+                    day: dyachooser,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: layouts.isWeb ? 250 : 160,
+                        height: 70,
+                        child: DropdownButtonFormField<String>(
+                          value: selectedTime,
+                          decoration: _inputDecoration("Choose Workout"),
+                          dropdownColor: Colors.grey[900],
+                          style: const TextStyle(color: Colors.white),
+                          items:
+                              ["beginner", "Advanced", "Intermediate"]
+                                  .map(
+                                    (difficulty) => DropdownMenuItem(
+                                      value: difficulty,
+                                      child: Text(difficulty),
                                     ),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 30),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
+                                  )
+                                  .toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              selectedTime = val!;
+                              getDataWithId(
+                                val == 'beginner'
+                                    ? 1
+                                    : val == 'Intermediate'
+                                    ? 2
+                                    : 3,
+                              );
+                            });
+                          },
+                        ),
+                      ),
 
-                                            child: Container(
-                                              decoration: BoxDecoration(
+                      SizedBox(
+                        width: layouts.isWeb ? 180 : 100,
+                        height: 70,
+                        child: DropdownButtonFormField<int>(
+                          value: dyachooser,
+                          decoration: _inputDecoration("Choose Day"),
+                          dropdownColor: Colors.grey[900],
+                          style: const TextStyle(color: Colors.white),
+                          items: List.generate(
+                            100,
+                            (index) => DropdownMenuItem(
+                              value: index + 1,
+                              child: Text('${index + 1}'),
+                            ),
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              dyachooser = val!;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Expanded(
+                    child: ValueListenableBuilder(
+                      valueListenable: setGoalListener,
+                      builder:
+                          (context, value, child) =>
+                              value.isEmpty
+                                  ? const Center(
+                                    child: Text(
+                                      "No Workouts Added",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  )
+                                  : ListView.separated(
+                                    separatorBuilder:
+                                        (context, index) =>
+                                            const SizedBox(height: 15),
+                                    itemCount: value.length,
+                                    itemBuilder: (context, index) {
+                                      final item = value[index];
+                                      return Container(
+                                        height: layouts.isWeb ? 150 : 100,
+                                        width:
+                                            layouts.isWeb
+                                                ? 500
+                                                : double.infinity,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.white,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          gradient: commenGradient()
+                                              .withOpacity(0.4),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(20),
+                                                // child: Image.file(
+                                                //   File(item.image),
+                                                //   width: 70,
+                                                //   height: 70,
+                                                //   fit: BoxFit.cover,
+                                                // ),
                                               ),
-                                              width: 50,
-                                              height: 50,
-                                              child: Image.file(
-                                                File(value[index].image),
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 10,
+                                                    ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                      item.workoutName,
+                                                      style: commentStyle(
+                                                        layouts.isWeb ? 20 : 16,
+                                                        Colors.white,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "Reps: ${item.rep}",
+                                                      style: commentStyle(
+                                                        layouts.isWeb ? 20 : 16,
+                                                        Colors.white,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "Set: ${item.set}",
+                                                      style: commentStyle(
+                                                        layouts.isWeb ? 20 : 16,
+                                                        Colors.white,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                              left: 20,
+                                            Checkbox(
+                                              value: selectedIndexes.contains(
+                                                index,
+                                              ),
+                                              onChanged: (bool? isChecked) {
+                                                setState(() {
+                                                  isChecked == true
+                                                      ? selectedIndexes.add(
+                                                        index,
+                                                      )
+                                                      : selectedIndexes.remove(
+                                                        index,
+                                                      );
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  value[index].workoutName,
-                                                  style: commentStyle(
-                                                    20,
-                                                    Colors.white,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Reps: ${value[index].rep}",
-                                                  style: commentStyle(
-                                                    10,
-                                                    Colors.white,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Set: ${value[index].set}",
-                                                  style: commentStyle(
-                                                    10,
-                                                    Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                          ],
                                         ),
-                                        Checkbox(
-                                          value: selectedIndexes.contains(
-                                            index,
-                                          ),
-                                          onChanged: (bool? isChecked) {
-                                            setState(() {
-                                              if (isChecked == true) {
-                                                selectedIndexes.add(index);
-                                              } else {
-                                                selectedIndexes.remove(index);
-                                              }
-                                            });
-                                          },
-                                          checkColor: Colors.white,
-                                          activeColor: Colors.green,
-                                        ),
-                                      ],
-                                    ),
+                                      );
+                                    },
                                   ),
-                                ),
-                          ),
-                ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
+        );
+      },
+    );
+  }
+
+  /// 🔹 Input decoration helper
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Colors.white),
+      enabledBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white),
+      ),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.blueAccent),
       ),
     );
   }

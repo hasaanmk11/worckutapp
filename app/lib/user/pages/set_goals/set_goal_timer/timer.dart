@@ -1,13 +1,13 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
+import 'package:app/responsive/home_screen_layouts.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:app/user/pages/set_goals/model/setgoal.dart';
 import 'package:app/user/pages/set_goals/set_goal_timer/const/timer_items.dart';
 import 'package:app/user/pages/set_goals/set_goal_timer/db/db.dart';
-import 'package:flutter/material.dart';
 
 class TimerPage extends StatefulWidget {
-  TimerPage({super.key, required this.day, required this.workout});
+  const TimerPage({super.key, required this.day, required this.workout});
 
   final int day;
   final List<String> workout;
@@ -17,280 +17,366 @@ class TimerPage extends StatefulWidget {
 }
 
 class _TimerPageState extends State<TimerPage> {
-  Timer? timer;
-  Timer? restTimer;
+  Timer? _workoutTimer;
+  Timer? _restTimer;
 
-  int seconds = 30;
-  int restTime = 30;
+  int _seconds = 30;
+  int _restTime = 30;
+  bool _isRunning = false;
+  int _currentWorkoutIndex = 0;
+  List<int> _completedWorkouts = [];
 
-  bool isRunning = false;
-  int currentWorkoutIndex = 0;
-  List<int> completedWorkouts = [];
-
-  String get displayTime {
-    final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
-    final secs = (seconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$secs';
+  String get _formattedTime {
+    final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
+    final seconds = (_seconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
-  void startTimer() {
-    stopTimer();
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (seconds > 0) {
-        setState(() => seconds--);
+  void _startWorkoutTimer() {
+    _stopWorkoutTimer();
+    _workoutTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_seconds > 0) {
+        setState(() => _seconds--);
       } else {
-        setState(() {
-          completedWorkouts.add(currentWorkoutIndex);
-          if (currentWorkoutIndex < widget.workout.length - 1) {
-            currentWorkoutIndex++;
-            seconds = 30;
-            startTimer(); 
-          } else {
-            stopTimer();
-          }
-        });
+        _handleWorkoutComplete();
       }
     });
-    setState(() => isRunning = true);
+    setState(() => _isRunning = true);
   }
 
-  void stopTimer() {
-    timer?.cancel();
-    setState(() => isRunning = false);
+  void _stopWorkoutTimer() {
+    _workoutTimer?.cancel();
+    setState(() => _isRunning = false);
   }
 
-  void resetTimer() {
-    stopTimer();
+  void _resetWorkoutTimer() {
+    _stopWorkoutTimer();
     setState(() {
-      seconds = 30;
-      currentWorkoutIndex = 0;
-      completedWorkouts.clear();
+      _seconds = 30;
+      _currentWorkoutIndex = 0;
+      _completedWorkouts.clear();
     });
   }
 
-  void selectTime(int selectedSeconds) {
-    stopTimer();
-    setState(() => seconds = selectedSeconds);
+  void _selectWorkoutTime(int time) {
+    _stopWorkoutTimer();
+    setState(() => _seconds = time);
   }
 
-  void startRestTimer() {
-    restTimer?.cancel();
-    restTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (restTime > 0) {
-        setState(() => restTime--);
+  void _startRestTimer() {
+    _restTimer?.cancel();
+    setState(() => _restTime = 30);
+
+    _restTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_restTime > 0) {
+        setState(() => _restTime--);
       } else {
         timer.cancel();
-        setState(() => restTime = 30);
+        setState(() => _restTime = 30);
       }
     });
+  }
+
+  void _handleWorkoutComplete() {
+    _workoutTimer?.cancel();
+    setState(() {
+      _completedWorkouts.add(_currentWorkoutIndex);
+      if (_currentWorkoutIndex < widget.workout.length - 1) {
+        _currentWorkoutIndex++;
+        _seconds = 30;
+        _startWorkoutTimer();
+      } else {
+        _isRunning = false;
+      }
+    });
+  }
+
+  Color _getTileColor(int index) {
+    if (_completedWorkouts.contains(index)) {
+      return Colors.green;
+    } else if (index == _currentWorkoutIndex) {
+      return Colors.orange;
+    } else {
+      return Colors.grey;
+    }
   }
 
   @override
   void dispose() {
-    timer?.cancel();
-    restTimer?.cancel();
+    _workoutTimer?.cancel();
+    _restTimer?.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            const Center(
-              child: Text(
-                "Countdown now",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  letterSpacing: 2,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final layout = ScreenLayouts(constraints: constraints);
 
-          
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
                 children: [
-                  const SizedBox(width: 20),
-                  ...timeOptions.entries.map((entry) {
-                    return GestureDetector(
-                      onTap: () => selectTime(entry.value),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 15,
-                          vertical: 8,
-                        ),
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text(
-                          entry.key,
-                          style: TextStyle(
-                            color:
-                                (seconds == entry.value)
-                                    ? Colors.white
-                                    : Colors.grey,
-                            fontSize: 18,
-                            fontWeight:
-                                (seconds == entry.value)
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  const SizedBox(width: 20),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            Container(
-              width: 250,
-              height: 250,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isRunning ? Colors.white : Colors.blue,
-                  width: 5,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  displayTime,
-                  style: TextStyle(
-                    color: isRunning ? Colors.white : Colors.grey,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Controls + Workout List
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: isRunning ? stopTimer : startTimer,
-                    icon: Icon(
-                      isRunning ? Icons.pause_circle : Icons.play_circle,
-                      size: 60,
-                      color: Colors.green,
+                  const SizedBox(height: 30),
+                  Text(
+                    "Countdown now",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: layout.fontSize + 4,
+                      letterSpacing: 2,
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: SizedBox(
-                      height: 80,
-                   
-                      child: ListView.separated(
-                        itemCount: widget.workout.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 6),
-                        itemBuilder: (context, index) {
-                          Color tileColor;
-                          if (completedWorkouts.contains(index)) {
-                            tileColor = Colors.green;
-                          } else if (index == currentWorkoutIndex) {
-                            tileColor = Colors.orange;
-                          } else {
-                            tileColor = Colors.grey;
-                          }
-
-                          return Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: tileColor,
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.workout[index],
-                                style: commentStyle(15, Colors.white),
-                              ),
-                            ),
-                          );
-                        },
+                  const SizedBox(height: 20),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children:
+                            timeOptions.entries.map((entry) {
+                              final isSelected = _seconds == entry.value;
+                              return GestureDetector(
+                                onTap: () => _selectWorkoutTime(entry.value),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 8,
+                                  ),
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isSelected
+                                            ? Colors.white12
+                                            : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    entry.key,
+                                    style: TextStyle(
+                                      color:
+                                          isSelected
+                                              ? Colors.white
+                                              : Colors.grey,
+                                      fontSize: layout.fontSize,
+                                      fontWeight:
+                                          isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-           
-            ElevatedButton(
-              onPressed: () async {
-                final data = Setgoal(
-                  day:
-                      setGoalCardListener.value.isNotEmpty
-                          ? setGoalCardListener.value.last.day + 1
-                          : 1,
-                );
-                await setGoalCardUpdate(data);
-                resetTimer();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text("Finish", style: commentStyle(15, Colors.white)),
-            ),
-
-            const Spacer(),
-
-         
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                  const SizedBox(height: 30),
                   Container(
-                    width: 60,
-                    height: 60,
+                    width: layout.isWeb ? 300 : 140,
+                    height: layout.isWeb ? 300 : 140,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.green, width: 3),
+                      border: Border.all(
+                        color: _isRunning ? Colors.white : Colors.blue,
+                        width: 5,
+                      ),
                     ),
                     child: Center(
                       child: Text(
-                        "00:${restTime.toString().padLeft(2, '0')}",
-                        style: const TextStyle(color: Colors.white),
+                        _formattedTime,
+                        style: TextStyle(
+                          color: _isRunning ? Colors.white : Colors.grey,
+                          fontSize: layout.isWeb ? 100 : 36,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: startRestTimer,
-                    child: const Text(
-                      "Rest",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic,
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed:
+                              _isRunning
+                                  ? _stopWorkoutTimer
+                                  : _startWorkoutTimer,
+                          icon: Icon(
+                            _isRunning ? Icons.pause_circle : Icons.play_circle,
+                            size: layout.isWeb ? 70 : 50,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: SizedBox(
+                            height: layout.isWeb ? 300 : 200,
+                            child:
+                                layout.isWeb
+                                    ? GridView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: widget.workout.length,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount:
+                                                layout.isWeb ? 4 : 2,
+                                            crossAxisSpacing: 10,
+                                            mainAxisSpacing: 10,
+                                            childAspectRatio: 3,
+                                          ),
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: layout.isWeb ? 40 : 50,
+                                          height: layout.isWeb ? 80 : 40,
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                            color: _getTileColor(index),
+                                          ),
+                                          child: Center(
+                                            child: FittedBox(
+                                              child: Text(
+                                                widget.workout[index],
+                                                style: commentStyle(
+                                                  layout.isWeb ? 50 : 12,
+                                                  Colors.white,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                    : ListView.separated(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: widget.workout.length,
+                                      separatorBuilder:
+                                          (_, __) => const SizedBox(height: 6),
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: layout.isWeb ? 80 : 50,
+                                          height: layout.isWeb ? 80 : 40,
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              15,
+                                            ),
+                                            color: _getTileColor(index),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              widget.workout[index],
+                                              style: commentStyle(
+                                                layout.fontSize + 1,
+                                                Colors.white,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: layout.isWeb ? 150 : 100,
+                    height: layout.isWeb ? 70 : 40,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        final newDay =
+                            setGoalCardListener.value.isNotEmpty
+                                ? setGoalCardListener.value.last.day + 1
+                                : 1;
+                        await setGoalCardUpdate(Setgoal(day: newDay));
+                        _resetWorkoutTimer();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: layout.isWeb ? 50 : 20,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Finish",
+                          style: commentStyle(
+                            layout.isWeb ? 29 : 12,
+                            Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: layout.isWeb ? 100 : 90,
+                        height: layout.isWeb ? 90 : 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.green, width: 3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            "00:${_restTime.toString().padLeft(2, '0')}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: layout.fontSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: InkWell(
+                          onTap: _startRestTimer,
+                          child: Text(
+                            "Rest",
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: layout.fontSize + 6,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

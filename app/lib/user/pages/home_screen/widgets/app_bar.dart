@@ -16,7 +16,7 @@ Widget buildSliverAppBar() {
         bottomRight: Radius.circular(30),
       ),
       child: Container(
-        color: commenColor(),
+        color: Colors.white.withValues(alpha: 0.1),
         child: FlexibleSpaceBar(
           background: Padding(
             padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
@@ -28,7 +28,7 @@ Widget buildSliverAppBar() {
                 Text(
                   "Level Up",
                   style: GoogleFonts.acme(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 24,
                   ),
@@ -36,7 +36,7 @@ Widget buildSliverAppBar() {
                 Text(
                   "Nice To Meet You",
                   style: GoogleFonts.acme(
-                    color: Colors.black.withValues(alpha: 0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ),

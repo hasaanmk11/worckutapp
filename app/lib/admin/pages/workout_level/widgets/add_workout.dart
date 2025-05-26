@@ -18,6 +18,8 @@ void showCustomDialog(BuildContext context, int categoryID) {
   int setChooser = 1;
   int repChooser = 1;
 
+const String urlHint= 'https://www.youtube.com/watch?v=...';
+
   Future<void> pickImageFromGallery() async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -80,7 +82,7 @@ void showCustomDialog(BuildContext context, int categoryID) {
                   decoration: InputDecoration(
                     labelText: 'YouTube Video URL',
                     labelStyle: const TextStyle(color: Colors.black),
-                    hintText: 'https://www.youtube.com/watch?v=...',
+                    hintText: urlHint,
                     hintStyle: const TextStyle(color: Colors.white38),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),

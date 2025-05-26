@@ -1,10 +1,12 @@
-
-import 'package:app/user/pages/transformation/db/db.dart';
-import 'package:app/user/pages/transformation/functions/savelastphotodate.dart';
-import 'package:app/user/pages/transformation/model/transformtion.dart';
+// lib/user/pages/transformation/functions/takephoto.dart
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../db/db.dart';
+import '../model/transformtion.dart';
+import 'savelastphotodate.dart';
 
 Future<void> takeWeeklyPhoto({
   required BuildContext context,
@@ -30,11 +32,18 @@ Future<void> takeWeeklyPhoto({
   }
 
   final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-  if (photo != null) {
-    final result = Transformtion(image: photo.path);
-    await addTransformationImage(result);
-    await saveLastPhotoDate(now);
 
+  if (photo != null) {
+    if (kIsWeb) {
+      final bytes = await photo.readAsBytes();
+      final result = Transformtion(image: photo.name, imageBytes: bytes);
+      await addTransformationImage(result);
+    } else {
+      final result = Transformtion(image: photo.path, imageBytes: null);
+      await addTransformationImage(result);
+    }
+
+    await saveLastPhotoDate(now);
     onPhotoTaken(now);
   }
 }
