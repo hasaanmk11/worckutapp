@@ -1,6 +1,6 @@
-import 'package:app/admin/pages/workout_catogories/model/model.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:app/admin/pages/workout_catogories/model/model.dart';
 
 class YouTubeVideo extends StatelessWidget {
   const YouTubeVideo({super.key, required this.workout});
@@ -9,30 +9,35 @@ class YouTubeVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final videoId = YoutubePlayerController.convertUrlToId(workout.url);
+
+    if (videoId == null) {
+      return const SizedBox(
+        width: 200,
+        height: 120,
+        child: Center(child: Icon(Icons.error, color: Colors.red)),
+      );
+    }
+
+    final controller = YoutubePlayerController.fromVideoId(
+      videoId: videoId,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        showFullscreenButton: true,
+
+        mute: false,
+        enableJavaScript: true,
+      ),
+    );
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: SizedBox(
         width: 200,
         height: 120,
-        child: YoutubePlayer(
-          controller: YoutubePlayerController(
-            initialVideoId: YoutubePlayer.convertUrlToId(workout.url) ?? '',
-            flags: const YoutubePlayerFlags(
-              autoPlay: false,
-              mute: false,
-              enableCaption: true,
-              controlsVisibleAtStart: true,
-              hideControls: false,
-              forceHD: true,
-            ),
-          ),
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: Colors.amber,
-          bottomActions: [
-            CurrentPosition(),
-            ProgressBar(isExpanded: true),
-            RemainingDuration(),
-          ],
+        child: YoutubePlayerScaffold(
+          controller: controller,
+          builder: (context, player) => player,
         ),
       ),
     );

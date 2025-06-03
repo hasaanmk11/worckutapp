@@ -1,26 +1,42 @@
-import 'package:app/admin/pages/workout_catogories/model/model.dart';
 import 'package:flutter/material.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:app/admin/pages/workout_catogories/model/model.dart';
 
-class youtubeVideoCard extends StatelessWidget {
-  const youtubeVideoCard({super.key, required this.workout});
+class YoutubeVideoCard extends StatelessWidget {
+  const YoutubeVideoCard({super.key, required this.workout});
 
   final Bignnermodel workout;
 
   @override
   Widget build(BuildContext context) {
+    final videoId = YoutubePlayerController.convertUrlToId(workout.url);
+
+    if (videoId == null) {
+      return const SizedBox(
+        width: 100,
+        height: 100,
+        child: Center(child: Icon(Icons.error, color: Colors.red)),
+      );
+    }
+
+    final controller = YoutubePlayerController.fromVideoId(
+      videoId: videoId,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        showFullscreenButton: true,
+       
+        mute: false,
+      ),
+    );
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: SizedBox(
         width: 100,
         height: 100,
-        child: YoutubePlayer(
-          controller: YoutubePlayerController(
-            initialVideoId: YoutubePlayer.convertUrlToId(workout.url) ?? '',
-            flags: YoutubePlayerFlags(autoPlay: false, mute: false),
-          ),
-          showVideoProgressIndicator: true,
-          progressIndicatorColor: Colors.amber,
+        child: YoutubePlayerScaffold(
+          controller: controller,
+          builder: (context, player) => player,
         ),
       ),
     );

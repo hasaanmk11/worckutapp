@@ -66,7 +66,7 @@ class _BeginnerInterMediateAdvancedState
                   padding: const EdgeInsets.all(16),
                   child: Row(
                     children: [
-                      youtubeVideoCard(workout: workout),
+                      YoutubeVideoCard(workout: workout),
 
                       const SizedBox(width: 16),
                       WorkoutDtls(workout: workout),

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 import 'package:app/admin/const/const.dart';
 import 'package:app/admin/pages/workout_catogories/db/workout_db.dart';
 import 'package:app/admin/pages/workout_catogories/model/model.dart';
@@ -18,16 +17,9 @@ void showCustomDialog(BuildContext context, int categoryID) {
   int setChooser = 1;
   int repChooser = 1;
 
-const String urlHint= 'https://www.youtube.com/watch?v=...';
+  const String urlHint = 'https://www.youtube.com/watch?v=...';
 
-  Future<void> pickImageFromGallery() async {
-    final pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-    );
-    if (pickedFile != null) {
-      caloriesImages.value = pickedFile.path;
-    }
-  }
+
 
   showDialog(
     context: context,
@@ -42,30 +34,6 @@ const String urlHint= 'https://www.youtube.com/watch?v=...';
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                GestureDetector(
-                  onTap: pickImageFromGallery,
-                  child: ValueListenableBuilder<String>(
-                    valueListenable: caloriesImages,
-                    builder: (context, imagePath, _) {
-                      return CircleAvatar(
-                        radius: 40,
-                        backgroundImage:
-                            imagePath.isNotEmpty
-                                ? FileImage(File(imagePath))
-                                : null,
-                        backgroundColor: Colors.grey[300],
-                        child:
-                            imagePath.isEmpty
-                                ? Icon(
-                                  Icons.add_a_photo,
-                                  size: 30,
-                                  color: Colors.black54,
-                                )
-                                : null,
-                      );
-                    },
-                  ),
-                ),
                 SizedBox(height: 16),
 
                 TextField(
@@ -95,7 +63,7 @@ const String urlHint= 'https://www.youtube.com/watch?v=...';
                     if (value == null || value.isEmpty) {
                       return 'Please enter a YouTube URL';
                     }
-                   
+
                     final regExp = RegExp(pattern);
                     if (!regExp.hasMatch(value)) {
                       return 'Enter a valid YouTube URL';

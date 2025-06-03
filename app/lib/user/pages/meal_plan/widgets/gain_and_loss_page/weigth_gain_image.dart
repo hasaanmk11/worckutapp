@@ -6,15 +6,12 @@ class WeigthGainImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(20),
-        bottomLeft: Radius.circular(20),
-      ),
+      borderRadius: BorderRadius.circular(10),
       child: Image.asset(
         "assets/meal1.jpg",
-        width: 120,
-        height: double.infinity,
         fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
       ),
     );
   }

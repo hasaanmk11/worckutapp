@@ -27,7 +27,7 @@ class BeginnerScreenTitleCard extends StatelessWidget {
             children: [
               Text(
                 "Beginners",
-                style: commentStyle(isWeb ? 30 : 16, Colors.white),
+                style: commentStyle(isWeb ? 30 : 22, Colors.white),
               ),
               Image.asset(
                 "assets/logo.png",

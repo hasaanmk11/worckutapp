@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-    applicationId = "com.example.app"
+    applicationId = "com.hasan.Levelup"
     minSdk = flutter.minSdkVersion
     targetSdk = flutter.targetSdkVersion
     multiDexEnabled = true

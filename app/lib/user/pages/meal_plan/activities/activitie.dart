@@ -170,7 +170,7 @@ class ActivityCardDtls extends StatelessWidget {
   Widget build(BuildContext context) {
     final int fontSize =
         layout.isMobile
-            ? 18
+            ? 14
             : layout.isTablet
             ? 12
             : 22;
@@ -179,12 +179,12 @@ class ActivityCardDtls extends StatelessWidget {
       children: [
         Text(
           activity.activity,
-          style: commentStyle(fontSize as double, Colors.white),
+          style: commentStyle(fontSize.toDouble(), Colors.white),
         ),
         const SizedBox(height: 6),
         Text(
           "Time: ${activity.time} minutes",
-          style: commentStyle(fontSize as double, Colors.white70),
+          style: commentStyle(fontSize.toDouble(), Colors.white70),
         ),
       ],
     );

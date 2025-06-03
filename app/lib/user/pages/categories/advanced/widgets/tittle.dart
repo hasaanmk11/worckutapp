@@ -25,7 +25,7 @@ class advancedScreenTittleCard extends StatelessWidget {
             children: [
               Text(
                 "Advanced",
-                style: commentStyle(isWeb ? 30 : 16, Colors.white),
+                style: commentStyle(isWeb ? 30 : 22, Colors.white),
               ),
 
               Image.asset(

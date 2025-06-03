@@ -1,4 +1,3 @@
-
 import 'package:app/responsive/screen_utils.dart';
 import 'package:app/styles/cmn.dart';
 import 'package:app/user/pages/home_screen/widgets/worckut_card.dart';
@@ -37,7 +36,7 @@ Widget buildCard(
             Container(
               margin: const EdgeInsets.all(10),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(20),
                 child: Image.asset(
                   image,
                   width: imageSize,

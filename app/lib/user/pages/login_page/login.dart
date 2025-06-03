@@ -5,6 +5,7 @@ import 'package:app/user/pages/login_page/model/login_model.dart';
 import 'package:app/user/pages/login_page/widgets/email.dart';
 import 'package:app/user/pages/login_page/widgets/pass.dart';
 import 'package:app/user/pages/user_dtls_page/userdtls.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -42,9 +43,11 @@ class _LoginState extends State<Login> {
   }
 
   Widget _buildBackgroundImage() {
-    return Positioned.fill(
-      child: Image.asset("assets/splash.jpeg", fit: BoxFit.cover),
-    );
+    return kIsWeb
+        ? isWebLoginBg()
+        : Positioned.fill(
+          child: Image.asset("assets/splash.jpeg", fit: BoxFit.cover),
+        );
   }
 
   Widget _buildLoginBox(double width) {
@@ -52,7 +55,7 @@ class _LoginState extends State<Login> {
       width: width,
       padding: const EdgeInsets.all(24.0),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Form(
@@ -100,6 +103,26 @@ class _LoginState extends State<Login> {
             "Login",
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class isWebLoginBg extends StatelessWidget {
+  const isWebLoginBg({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF8E2DE2), // purple
+            Color.fromARGB(255, 67, 59, 84), // deep blue
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
       ),
     );

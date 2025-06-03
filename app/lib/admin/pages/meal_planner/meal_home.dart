@@ -7,8 +7,7 @@ import 'package:app/styles/cmn.dart';
 import 'package:app/user/pages/meal_plan/add_page.dart';
 
 import 'package:app/admin/pages/meal_planner/model/MealModel.dart';
-import 'package:app/user/pages/meal_plan/widgets/gain_and_loss_page/gain_crad.dart';
-import 'package:app/user/pages/meal_plan/widgets/set_meal_tittle_icon.dart';
+
 import 'package:flutter/material.dart';
 
 class MealHome extends StatelessWidget {
@@ -74,12 +73,12 @@ Widget buildLevelCard(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 24),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.06),
+            color: Colors.white.withValues(alpha: 0.06),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
             boxShadow: [
               BoxShadow(
-                color: Colors.white.withOpacity(0.04),
+                color: Colors.white.withValues(alpha:  0.04),
                 blurRadius: 15,
                 offset: const Offset(0, 6),
               ),

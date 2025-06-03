@@ -16,7 +16,12 @@ class WorkoutDtls extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(workout.workoutName, style: commentStyle(20, Colors.white)),
+          Flexible(
+            child: Text(
+              workout.workoutName,
+              style: commentStyle(20, Colors.white),
+            ),
+          ),
           const SizedBox(height: 4),
           Row(
             children: [

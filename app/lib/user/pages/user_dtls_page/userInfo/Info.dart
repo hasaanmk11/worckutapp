@@ -25,13 +25,13 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 1),
     );
     _fade = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
     _controller.forward();
+
     getDataFromHeigthAndWeigth();
     checkUser();
     setGoalCardGetData();
@@ -43,6 +43,7 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
       floatingActionButton: FlotingActionButtonPage(),
       body: Stack(
         children: [
+          // Background Gradient
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -84,7 +85,16 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
                       child: ValueListenableBuilder(
                         valueListenable: userDtlsListener,
                         builder: (context, value, child) {
-                          final data = value[0].username;
+                          if (value.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                "No user data found.",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            );
+                          }
+
+                          final data = value[0].username ?? "Unknown";
 
                           return ValueListenableBuilder(
                             valueListenable: heigthAndWeigthListener,
@@ -103,16 +113,12 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
 
                               final h = heigthAndWeigth[0].heigth.toString();
                               final w = heigthAndWeigth[0].weigth.toString();
-                              final image = heigthAndWeigth[0].imagePath;
-
-                              print(h);
-                              print(w);
+                              final image = heigthAndWeigth[0].imagePath ?? "";
 
                               return ValueListenableBuilder(
                                 valueListenable: setGoalCardListener,
                                 builder: (context, goalDya, child) {
                                   String goalDyas = "N/A";
-
                                   if (goalDya.isNotEmpty) {
                                     goalDyas = goalDya.last.day.toString();
                                   }
@@ -120,33 +126,45 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
                                   return Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
+                                      // ✅ Fixed Image Display
                                       CircleAvatar(
-                                        radius: 40,
+                                        radius: 50,
                                         backgroundColor: Colors.white,
-                                        child:
-                                            image.isEmpty
-                                                ? const Icon(
-                                                  Icons.person,
-                                                  size: 50,
-                                                  color: Colors.grey,
-                                                )
-                                                : kIsWeb
-                                                ? const Icon(
-                                                  Icons.person,
-                                                  size: 50,
-                                                  color: Colors.grey,
-                                                )
-                                                : ClipOval(
-                                                  child: Image.file(
-                                                    File(image),
-                                                    fit: BoxFit.cover,
+                                        child: ClipOval(
+                                          child:
+                                              image.isEmpty
+                                                  ? const Icon(
+                                                    Icons.person,
+                                                    size: 50,
+                                                    color: Colors.grey,
+                                                  )
+                                                  : kIsWeb
+                                                  ? Image.network(
+                                                    image,
                                                     width: 100,
                                                     height: 100,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder:
+                                                        (
+                                                          context,
+                                                          error,
+                                                          stackTrace,
+                                                        ) => const Icon(
+                                                          Icons.person,
+                                                          size: 50,
+                                                          color: Colors.grey,
+                                                        ),
+                                                  )
+                                                  : Image.file(
+                                                    File(image),
+                                                    width: 100,
+                                                    height: 100,
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                ),
+                                        ),
                                       ),
-
                                       const SizedBox(height: 20),
+
                                       const Text(
                                         "User Profile",
                                         style: TextStyle(
@@ -175,6 +193,7 @@ class _InfoState extends State<Info> with SingleTickerProviderStateMixin {
             ),
           ),
 
+          // Admin Button
           Padding(
             padding: const EdgeInsets.only(top: 40, right: 10),
             child: Align(

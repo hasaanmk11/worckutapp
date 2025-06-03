@@ -139,10 +139,14 @@ void editeCard(BuildContext context, Bignnermodel Items) {
                       workoutName: textController.text,
                       categoryId: Items.categoryId,
                       id: Items.id,
-                      url: _youtubeUrlController.text,
+                      url:
+                          _youtubeUrlController.text.isEmpty
+                              ? Items.url
+                              : _youtubeUrlController.text,
                     );
                     updateItem(data);
 
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                 ),

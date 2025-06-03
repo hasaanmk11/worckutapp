@@ -3,6 +3,8 @@ import 'package:app/responsive/home_screen_layouts.dart';
 import 'package:app/user/pages/categories/advanced/advanced.dart';
 import 'package:app/user/pages/categories/beginner/beginner.dart';
 import 'package:app/user/pages/categories/intermediate/intermediate.dart';
+import 'package:app/user/pages/categories/layout/ismobile_layout.dart';
+import 'package:app/user/pages/categories/layout/isweb_layout.dart';
 import 'package:app/user/pages/categories/sample_workouts/workout_video_list.dart';
 import 'package:app/user/pages/categories/widgets/catgry_wd.dart';
 import 'package:app/user/pages/categories/widgets/discover_text/descover.dart';
@@ -86,24 +88,8 @@ class Categories extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     layout.isMobile
-                        ? Column(
-                          children: List.generate(cards.length, (index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: cards[index],
-                            );
-                          }),
-                        )
-                        : GridView.count(
-                          crossAxisCount: layout.isTablet ? 2 : 3,
-                          shrinkWrap: true,
-                          crossAxisSpacing: 20,
-                          mainAxisSpacing: 20,
-                          physics: const NeverScrollableScrollPhysics(),
-                          childAspectRatio:
-                              layout.cardWidth / layout.cardHeight,
-                          children: cards,
-                        ),
+                        ? CategotieMobileLayout(cards: cards)
+                        : CategorieWebLayout(layout: layout, cards: cards),
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -115,3 +101,6 @@ class Categories extends StatelessWidget {
     );
   }
 }
+
+
+

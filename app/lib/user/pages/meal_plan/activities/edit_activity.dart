@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -51,12 +52,21 @@ class _EditActivityState extends State<EditActivity> {
 
   Future<void> _pickImage() async {
     final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+
     if (picked != null) {
-      final bytes = await picked.readAsBytes();
-      setState(() {
-        imageBytes = bytes;
-        imagePath = null;
-      });
+      if (kIsWeb) {
+        final bytes = await picked.readAsBytes();
+        setState(() {
+          imageBytes = bytes;
+          imagePath = null;
+        });
+      } else {
+        final path = picked.path;
+        setState(() {
+          imagePath = path;
+          imageBytes = null;
+        });
+      }
     }
   }
 

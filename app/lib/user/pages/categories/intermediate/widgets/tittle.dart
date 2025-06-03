@@ -25,7 +25,7 @@ class intermediateScreenTittleCard extends StatelessWidget {
             children: [
               Text(
                 "Intermediate",
-                style: commentStyle(isWeb ? 30 : 16, Colors.white),
+                style: commentStyle(isWeb ? 30 : 22, Colors.white),
               ),
 
               Image.asset(
